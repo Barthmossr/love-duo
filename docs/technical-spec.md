@@ -133,6 +133,103 @@ flowchart TD
 - Derivations: Selectors for computed stats (totals, recent activity)
 - Rationale: Redux Toolkit provides explicit structure, testability, and type safety
 - Alternative: Zustand for simpler stores; chosen RTK for scale and tooling
+- Sync gate: `sync` slice controls cloud sync enablement based on pairing and both users’ auth states
+
+### 4.1 Sync Slice Example
+
+```ts
+// state/sync.slice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+
+type AuthStatus = "loggedOut" | "loggedIn"
+
+interface SyncState {
+  enabled: boolean
+  isPaired: boolean
+  userAAuth: AuthStatus
+  userBAuth: AuthStatus
+}
+
+const initialState: SyncState = {
+  enabled: false,
+  isPaired: false,
+  userAAuth: "loggedOut",
+  userBAuth: "loggedOut",
+}
+
+const syncSlice = createSlice({
+  name: "sync",
+  initialState,
+  reducers: {
+    setPaired(state, action: PayloadAction<boolean>) {
+      state.isPaired = action.payload
+    },
+    setUserAAuth(state, action: PayloadAction<AuthStatus>) {
+      state.userAAuth = action.payload
+    },
+    setUserBAuth(state, action: PayloadAction<AuthStatus>) {
+      state.userBAuth = action.payload
+    },
+    evaluateGate(state) {
+      const bothLoggedIn =
+        state.userAAuth === "loggedIn" && state.userBAuth === "loggedIn"
+      state.enabled = state.isPaired && bothLoggedIn
+    },
+  },
+})
+
+const selectSyncEnabled = (root: { sync: SyncState }): boolean =>
+  root.sync.enabled
+
+const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } =
+  syncSlice.actions
+
+export {
+  syncSlice,
+  selectSyncEnabled,
+  setPaired,
+  setUserAAuth,
+  setUserBAuth,
+  evaluateGate,
+}
+```
+
+```ts
+// state/store.ts
+import { configureStore } from "@reduxjs/toolkit"
+import { syncSlice } from "./sync.slice"
+
+const store = configureStore({
+  reducer: {
+    sync: syncSlice.reducer,
+  },
+})
+
+type RootState = ReturnType<typeof store.getState>
+
+export { store, RootState }
+```
+
+```ts
+// sync/observer.functions.ts
+import { store } from "../state/store"
+import { selectSyncEnabled } from "../state/sync.slice"
+import { applySyncMode } from "../sync/gate.functions"
+
+const observeSync = (): void => {
+  let last = selectSyncEnabled(store.getState())
+  applySyncMode(last)
+  store.subscribe(() => {
+    const current = selectSyncEnabled(store.getState())
+    if (current !== last) {
+      last = current
+      applySyncMode(current)
+    }
+  })
+}
+
+export { observeSync }
+```
 
 ## 5. Data Models (TypeScript)
 
@@ -541,3 +638,72 @@ const env = envSchema.parse(process.env)
 
 export { env }
 ```
+
+## 16. Sync Gating Model
+
+### 16.1 State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> LoggedOut
+    LoggedOut --> PairedPending: create couple / enter code
+    PairedPending --> OneLoggedIn: first user authenticated
+    OneLoggedIn --> BothLoggedIn: second user authenticated
+    BothLoggedIn --> SyncEnabled: pairing confirmed
+    SyncEnabled --> LoggedOut: logout both / revoke
+```
+
+- Sync is disabled in `LoggedOut`, `PairedPending`, and `OneLoggedIn`
+- Sync is enabled only in `SyncEnabled` (both users logged in and paired)
+- Local operations (SQLite + SecureStore) remain fully functional in all states
+
+### 16.2 Pseudocode: Sync Gate
+
+```ts
+// sync/gate.functions.ts
+type AuthStatus = "loggedOut" | "loggedIn"
+
+interface CoupleSyncGateInput {
+  isPaired: boolean
+  userAAuth: AuthStatus
+  userBAuth: AuthStatus
+}
+
+const isSyncEnabled = (input: CoupleSyncGateInput): boolean => {
+  const bothLoggedIn =
+    input.userAAuth === "loggedIn" && input.userBAuth === "loggedIn"
+  return input.isPaired && bothLoggedIn
+}
+
+interface SyncState {
+  enabled: boolean
+}
+
+const applySyncMode = (enabled: boolean): SyncState => {
+  if (enabled) {
+    enableSyncQueue()
+    allowRemoteReads()
+    allowRemoteWrites()
+  } else {
+    disableSyncQueue()
+    blockRemoteReads()
+    blockRemoteWrites()
+  }
+  return { enabled }
+}
+
+const enableSyncQueue = (): void => {}
+const allowRemoteReads = (): void => {}
+const allowRemoteWrites = (): void => {}
+const disableSyncQueue = (): void => {}
+const blockRemoteReads = (): void => {}
+const blockRemoteWrites = (): void => {}
+
+export { isSyncEnabled, applySyncMode }
+```
+
+### 16.3 Integration Notes
+
+- Evaluate the gate on app start and whenever auth or pairing changes
+- Persist `SyncState.enabled` in Redux; drive UI/feature flags accordingly
+- Queue unsynced local changes; flush when `enabled` transitions to true
