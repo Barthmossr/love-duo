@@ -287,7 +287,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: "loveduo",
   android: {
     package: "app.loveduo.mobile",
-    permissions: ["READ_MEDIA_IMAGES", "WRITE_EXTERNAL_STORAGE"],
+    permissions: ["READ_MEDIA_IMAGES"],
     icon: "./assets/android-icon.png",
   },
   plugins: [
@@ -334,8 +334,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 ### 9.5 Local Storage Strategy
  
  - Usage policy
-   - Use SQLite only before authentication and for non-logged users
-   - Trigger cloud sync only after both users are authenticated and paired
+   - Use SQLite as the primary local storage mechanism both before and after authentication
+   - Trigger cloud sync only after both users are authenticated and paired, layering remote sync on top of local SQLite storage
    - Retain all data locally prior to sync; no remote calls
 
 - SQLite schema
@@ -451,12 +451,16 @@ export { generateCoupleCode }
 ```txt
 [Profile Tab]
 ┌─────────────────────────────────────────────┐
-│ Couple: The Wanderers    Code: ABCD1234     │
-│ Users: Anna  •  Ben                          │
-│ Stats: Albums 12  Photos 243  Dates 18       │
+│ Couple: The Wanderers    Code: [Tap to View]│
+│ Users: Anna • Ben                            │
+│ Stats: Albums 12 | Photos 243 | Dates 18     │
 │ Recent: 5 most recent dates                  │
 │ [Settings]                                   │
 └─────────────────────────────────────────────┘
+
+Note: The couple code should be masked by default and
+only revealed when the user explicitly taps to view it,
+ensuring alignment with security guidelines in section 9.4.
 ```
 
 ## 11. Quality Assurance
