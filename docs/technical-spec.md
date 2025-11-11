@@ -429,11 +429,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   - Never log raw codes
 
 ### 9.5 Local Storage Strategy
- 
- - Usage policy
-   - Use SQLite as the primary local storage mechanism both before and after authentication
-   - Trigger cloud sync only after both users are authenticated and paired, layering remote sync on top of local SQLite storage
-   - Retain all data locally prior to sync; no remote calls
+
+- Usage policy
+
+  - Use SQLite as the primary local storage mechanism both before and after authentication
+  - Trigger cloud sync only after both users are authenticated and paired, layering remote sync on top of local SQLite storage
+  - Retain all data locally prior to sync; no remote calls
 
 - SQLite schema
   - Tables: `couple`, `user`, `album`, `photo`, `planned_date`, `completed_date`
