@@ -133,15 +133,15 @@ flowchart TD
 - Derivations: Selectors for computed stats (totals, recent activity)
 - Rationale: Redux Toolkit provides explicit structure, testability, and type safety
 - Alternative: Zustand for simpler stores; chosen RTK for scale and tooling
- - Sync gate: `sync` slice controls cloud sync enablement based on pairing and both users’ auth states
+- Sync gate: `sync` slice controls cloud sync enablement based on pairing and both users’ auth states
 
 ### 4.1 Sync Slice Example
 
 ```ts
 // state/sync.slice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-type AuthStatus = 'loggedOut' | 'loggedIn'
+type AuthStatus = "loggedOut" | "loggedIn"
 
 interface SyncState {
   enabled: boolean
@@ -153,12 +153,12 @@ interface SyncState {
 const initialState: SyncState = {
   enabled: false,
   isPaired: false,
-  userAAuth: 'loggedOut',
-  userBAuth: 'loggedOut'
+  userAAuth: "loggedOut",
+  userBAuth: "loggedOut",
 }
 
 const syncSlice = createSlice({
-  name: 'sync',
+  name: "sync",
   initialState,
   reducers: {
     setPaired(state, action: PayloadAction<boolean>) {
@@ -171,28 +171,38 @@ const syncSlice = createSlice({
       state.userBAuth = action.payload
     },
     evaluateGate(state) {
-      const bothLoggedIn = state.userAAuth === 'loggedIn' && state.userBAuth === 'loggedIn'
+      const bothLoggedIn =
+        state.userAAuth === "loggedIn" && state.userBAuth === "loggedIn"
       state.enabled = state.isPaired && bothLoggedIn
-    }
-  }
+    },
+  },
 })
 
-const selectSyncEnabled = (root: { sync: SyncState }): boolean => root.sync.enabled
+const selectSyncEnabled = (root: { sync: SyncState }): boolean =>
+  root.sync.enabled
 
-const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } = syncSlice.actions
+const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } =
+  syncSlice.actions
 
-export { syncSlice, selectSyncEnabled, setPaired, setUserAAuth, setUserBAuth, evaluateGate }
+export {
+  syncSlice,
+  selectSyncEnabled,
+  setPaired,
+  setUserAAuth,
+  setUserBAuth,
+  evaluateGate,
+}
 ```
 
 ```ts
 // state/store.ts
-import { configureStore } from '@reduxjs/toolkit'
-import { syncSlice } from './sync.slice'
+import { configureStore } from "@reduxjs/toolkit"
+import { syncSlice } from "./sync.slice"
 
 const store = configureStore({
   reducer: {
-    sync: syncSlice.reducer
-  }
+    sync: syncSlice.reducer,
+  },
 })
 
 type RootState = ReturnType<typeof store.getState>
@@ -202,9 +212,9 @@ export { store, RootState }
 
 ```ts
 // sync/observer.functions.ts
-import { store } from '../state/store'
-import { selectSyncEnabled } from '../state/sync.slice'
-import { applySyncMode } from '../sync/gate.functions'
+import { store } from "../state/store"
+import { selectSyncEnabled } from "../state/sync.slice"
+import { applySyncMode } from "../sync/gate.functions"
 
 const observeSync = (): void => {
   let last = selectSyncEnabled(store.getState())
