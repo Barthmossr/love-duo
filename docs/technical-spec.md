@@ -133,6 +133,93 @@ flowchart TD
 - Derivations: Selectors for computed stats (totals, recent activity)
 - Rationale: Redux Toolkit provides explicit structure, testability, and type safety
 - Alternative: Zustand for simpler stores; chosen RTK for scale and tooling
+ - Sync gate: `sync` slice controls cloud sync enablement based on pairing and both users’ auth states
+
+### 4.1 Sync Slice Example
+
+```ts
+// state/sync.slice.ts
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
+type AuthStatus = 'loggedOut' | 'loggedIn'
+
+interface SyncState {
+  enabled: boolean
+  isPaired: boolean
+  userAAuth: AuthStatus
+  userBAuth: AuthStatus
+}
+
+const initialState: SyncState = {
+  enabled: false,
+  isPaired: false,
+  userAAuth: 'loggedOut',
+  userBAuth: 'loggedOut'
+}
+
+const syncSlice = createSlice({
+  name: 'sync',
+  initialState,
+  reducers: {
+    setPaired(state, action: PayloadAction<boolean>) {
+      state.isPaired = action.payload
+    },
+    setUserAAuth(state, action: PayloadAction<AuthStatus>) {
+      state.userAAuth = action.payload
+    },
+    setUserBAuth(state, action: PayloadAction<AuthStatus>) {
+      state.userBAuth = action.payload
+    },
+    evaluateGate(state) {
+      const bothLoggedIn = state.userAAuth === 'loggedIn' && state.userBAuth === 'loggedIn'
+      state.enabled = state.isPaired && bothLoggedIn
+    }
+  }
+})
+
+const selectSyncEnabled = (root: { sync: SyncState }): boolean => root.sync.enabled
+
+const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } = syncSlice.actions
+
+export { syncSlice, selectSyncEnabled, setPaired, setUserAAuth, setUserBAuth, evaluateGate }
+```
+
+```ts
+// state/store.ts
+import { configureStore } from '@reduxjs/toolkit'
+import { syncSlice } from './sync.slice'
+
+const store = configureStore({
+  reducer: {
+    sync: syncSlice.reducer
+  }
+})
+
+type RootState = ReturnType<typeof store.getState>
+
+export { store, RootState }
+```
+
+```ts
+// sync/observer.functions.ts
+import { store } from '../state/store'
+import { selectSyncEnabled } from '../state/sync.slice'
+import { applySyncMode } from '../sync/gate.functions'
+
+const observeSync = (): void => {
+  let last = selectSyncEnabled(store.getState())
+  applySyncMode(last)
+  store.subscribe(() => {
+    const current = selectSyncEnabled(store.getState())
+    if (current !== last) {
+      last = current
+      applySyncMode(current)
+    }
+  })
+}
+
+export { observeSync }
+```
 
 ## 5. Data Models (TypeScript)
 
