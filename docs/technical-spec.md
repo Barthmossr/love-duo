@@ -332,11 +332,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   - Never log raw codes
 
 ### 9.5 Local Storage Strategy
- 
- - Usage policy
-   - Use SQLite only before authentication and for non-logged users
-   - Trigger cloud sync only after both users are authenticated and paired
-   - Retain all data locally prior to sync; no remote calls
+
+- Usage policy
+
+  - Use SQLite only before authentication and for non-logged users
+  - Trigger cloud sync only after both users are authenticated and paired
+  - Retain all data locally prior to sync; no remote calls
 
 - SQLite schema
   - Tables: `couple`, `user`, `album`, `photo`, `planned_date`, `completed_date`
@@ -537,3 +538,72 @@ const env = envSchema.parse(process.env)
 
 export { env }
 ```
+
+## 16. Sync Gating Model
+
+### 16.1 State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> LoggedOut
+    LoggedOut --> PairedPending: create couple / enter code
+    PairedPending --> OneLoggedIn: first user authenticated
+    OneLoggedIn --> BothLoggedIn: second user authenticated
+    BothLoggedIn --> SyncEnabled: pairing confirmed
+    SyncEnabled --> LoggedOut: logout both / revoke
+```
+
+- Sync is disabled in `LoggedOut`, `PairedPending`, and `OneLoggedIn`
+- Sync is enabled only in `SyncEnabled` (both users logged in and paired)
+- Local operations (SQLite + SecureStore) remain fully functional in all states
+
+### 16.2 Pseudocode: Sync Gate
+
+```ts
+// sync/gate.functions.ts
+type AuthStatus = "loggedOut" | "loggedIn"
+
+interface CoupleSyncGateInput {
+  isPaired: boolean
+  userAAuth: AuthStatus
+  userBAuth: AuthStatus
+}
+
+const isSyncEnabled = (input: CoupleSyncGateInput): boolean => {
+  const bothLoggedIn =
+    input.userAAuth === "loggedIn" && input.userBAuth === "loggedIn"
+  return input.isPaired && bothLoggedIn
+}
+
+interface SyncState {
+  enabled: boolean
+}
+
+const applySyncMode = (enabled: boolean): SyncState => {
+  if (enabled) {
+    enableSyncQueue()
+    allowRemoteReads()
+    allowRemoteWrites()
+  } else {
+    disableSyncQueue()
+    blockRemoteReads()
+    blockRemoteWrites()
+  }
+  return { enabled }
+}
+
+const enableSyncQueue = (): void => {}
+const allowRemoteReads = (): void => {}
+const allowRemoteWrites = (): void => {}
+const disableSyncQueue = (): void => {}
+const blockRemoteReads = (): void => {}
+const blockRemoteWrites = (): void => {}
+
+export { isSyncEnabled, applySyncMode }
+```
+
+### 16.3 Integration Notes
+
+- Evaluate the gate on app start and whenever auth or pairing changes
+- Persist `SyncState.enabled` in Redux; drive UI/feature flags accordingly
+- Queue unsynced local changes; flush when `enabled` transitions to true
