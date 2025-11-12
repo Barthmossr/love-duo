@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite'
 
-import { MockTransactionContext, createMockDb } from './mocks'
+import { MockTransactionContext, createMockDb } from './helpers'
 
 import {
   ensureTables,
@@ -38,5 +38,22 @@ describe('database ensureTables', () => {
       'Failed to create tables'
     )
     expect(ctx.executedSql.length).toBe(0)
+  })
+
+  it('should wrap non-Error exceptions in DatabaseError', async () => {
+    const failingDb = {
+      execAsync: async (): Promise<void> => {
+        throw 'boom'
+      },
+      withTransactionAsync: async (
+        task: () => Promise<void>
+      ): Promise<void> => {
+        await task()
+      }
+    } as unknown as SQLiteDatabase
+
+    await expect(ensureTables(failingDb)).rejects.toThrow(
+      'Failed to create tables'
+    )
   })
 })
