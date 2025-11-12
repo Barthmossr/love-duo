@@ -76,7 +76,7 @@ const credentialsSchema = z.object({
   password: z.string().min(8)
 })
 
-const coupleCodeSchema = z.string().regex(/^\d{6}$/)
+const coupleCodeSchema = z.string().length(6).regex(/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/)
 
 export { credentialsSchema, coupleCodeSchema }
 ```

@@ -420,7 +420,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 
 - Code generation
   - Use secure random `nanoid` with custom alphabet
-  - Minimum 6 chars, avoid ambiguous characters (O/0, I/1)
+  - Exactly 6 chars, avoid ambiguous characters (O/0, I/1)
 - Storage
   - Store `coupleCodeHash` using SHA-256 locally
   - Keep raw codes only in `SecureStore`

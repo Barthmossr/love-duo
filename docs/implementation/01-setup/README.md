@@ -192,7 +192,8 @@ Step 08 — NPM scripts
       "start": "expo start",
       "android": "expo start --android",
       "ios": "expo start --ios",
-      "validate": "eslint . --ext .ts,.tsx && prettier --check . && tsc --noEmit && expo prebuild",
+      "validate": "eslint . --ext .ts,.tsx && prettier --check . && tsc --noEmit",
+      "prebuild": "expo prebuild",
       "test": "jest",
       "test:coverage": "jest --coverage",
       "test:unit": "jest --testPathPattern=tests/unit",
@@ -226,7 +227,7 @@ Step 09 — Commitlint
 - [ ] 09.06 CI enforcement
   - Add a CI step to run `npx commitlint --from=HEAD~10 --to=HEAD`
 - [ ] 09.07 Keep numbering strict
-  - Maintain `01`–`07` order when updating steps; add `08` for new steps
+  - Maintain `01`–`09` order when updating steps; add `10` for new steps
 
 Step 10 — Validation
 
@@ -237,13 +238,13 @@ Step 10 — Validation
 - [ ] 10.05 `npm run format:check` passes
 - [ ] 10.06 Expo app runs in emulator without runtime errors
 
-Step 12 — CI/CD workflows (separated)
+Step 11 — CI/CD workflows (separated)
 
-- [ ] 12.01 Add GitHub secrets (as needed)
+- [ ] 11.01 Add GitHub secrets (as needed)
 
   - `EXPO_TOKEN` if publishing is handled in deploy phase
 
-- [ ] 12.02 Create validation workflow `.github/workflows/validate.yml`
+- [ ] 11.02 Create validation workflow `.github/workflows/validate.yml`
 
   ```yaml
   name: validate
@@ -304,11 +305,11 @@ Step 13 — SQLite configuration
   ```typescript
   import { openDatabase, SQLiteDatabase } from "expo-sqlite"
 
-  const getDatabase = (): SQLite.SQLiteDatabase => {
-    return SQLite.openDatabase("love-duo.db")
+  const getDatabase = (): SQLiteDatabase => {
+    return openDatabase("love-duo.db")
   }
 
-  const ensureTables = (db: SQLite.SQLiteDatabase): Promise<void> => {
+  const ensureTables = (db: SQLiteDatabase): Promise<void> => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
