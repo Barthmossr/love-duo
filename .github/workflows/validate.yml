@@ -1,0 +1,20 @@
+name: validate
+
+on:
+  pull_request:
+    branches: [develop, staging, main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: npm
+      - run: npm ci
+      - run: npx commitlint --from=HEAD~10 --to=HEAD
+      - run: npm run validate
