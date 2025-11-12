@@ -296,8 +296,8 @@ Step 11 — CI/CD workflows (separated)
 
 Step 13 — SQLite configuration
 
-- [ ] 13.01 Install dependency `expo-sqlite` with exact version
-- [ ] 13.02 Initialize database and tables
+- [x] 13.01 Install dependency `expo-sqlite` with exact version
+- [x] 13.02 Initialize database and tables
 
   ```typescript
   import { openDatabase, SQLiteDatabase } from 'expo-sqlite'
@@ -325,7 +325,7 @@ Step 13 — SQLite configuration
   export { getDatabase, ensureTables }
   ```
 
-- [ ] 13.03 Validation checklist
+- [x] 13.03 Validation checklist
   - Open db, create table, insert and query one row
 
 Step 14 — DB sync for testing (Supabase)
