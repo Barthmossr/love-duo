@@ -28,4 +28,14 @@ describe('env validation', () => {
     process.env.EXPO_PUBLIC_API_URL = previousUrl
     process.env.NODE_ENV = previousNodeEnv
   })
+
+  test('throws when EXPO_PUBLIC_API_URL is invalid', () => {
+    const previousNodeEnv = process.env.NODE_ENV
+    const previousUrl = process.env.EXPO_PUBLIC_API_URL
+    process.env.NODE_ENV = 'test'
+    process.env.EXPO_PUBLIC_API_URL = 'not-a-url'
+    expect(() => getEnv()).toThrow()
+    process.env.EXPO_PUBLIC_API_URL = previousUrl
+    process.env.NODE_ENV = previousNodeEnv
+  })
 })
