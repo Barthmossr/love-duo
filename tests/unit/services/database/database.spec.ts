@@ -61,4 +61,13 @@ describe('database ensureTables', () => {
     const db = getDatabase()
     expect(typeof db).toBe('object')
   })
+
+  it('should insert and query one setting row', async () => {
+    const ctx: MockTransactionContext = { executedSql: [], settings: {} }
+    const db = createMockDb(ctx)
+    await ensureTables(db)
+    await insertSetting(db, 'theme', 'dark')
+    const value = await querySettingValue(db, 'theme')
+    expect(value).toBe('dark')
+  })
 })
