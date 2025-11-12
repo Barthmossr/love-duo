@@ -108,4 +108,21 @@ describe('database ensureTables', () => {
     )
     expect(result).toBeNull()
   })
+
+  it('should throw on insert failure', async () => {
+    const failingDb = {
+      runAsync: async (): Promise<void> => {
+        throw 'boom'
+      },
+      withTransactionAsync: async (
+        task: () => Promise<void>
+      ): Promise<void> => {
+        await task()
+      }
+    } as unknown as SQLiteDatabase
+
+    await expect(insertSetting(failingDb, 'theme', 'dark')).rejects.toThrow(
+      'Failed to insert setting'
+    )
+  })
 })
