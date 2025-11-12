@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite'
 
-import { MockTransactionContext, createMockDb } from './helpers'
+import { MockTransactionContext, createMockDb } from './mocks'
 
 import {
   ensureTables,
@@ -147,6 +147,18 @@ describe('database ensureTables', () => {
     const failingDb = {
       getFirstAsync: async (): Promise<null> => {
         throw new Error('boom')
+      }
+    } as unknown as SQLiteDatabase
+
+    await expect(querySettingValue(failingDb, 'theme')).rejects.toThrow(
+      'Failed to query setting'
+    )
+  })
+
+  it('should throw on query failure with non-Error', async () => {
+    const failingDb = {
+      getFirstAsync: async (): Promise<null> => {
+        throw 'boom'
       }
     } as unknown as SQLiteDatabase
 
