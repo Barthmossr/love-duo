@@ -60,4 +60,15 @@ describe('sync settings from supabase', () => {
     await syncSettingsFromSupabase(db, client)
     expect(Object.keys(ctx.settings).length).toBe(0)
   })
+
+  it('should wrap non-Error exceptions from client', async () => {
+    const db = createMockDb({
+      executedSql: [],
+      settings: {}
+    }) as unknown as SQLiteDatabase
+    const client: SupabaseClientMock = createThrowingSupabaseClientMock()
+    await expect(syncSettingsFromSupabase(db, client)).rejects.toThrow(
+      'Failed to sync settings'
+    )
+  })
 })
