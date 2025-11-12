@@ -20,7 +20,7 @@ Step 02 — Types & data model
 - [ ] 02.01 Create `gallery.types.ts` with core interfaces
 
 ```typescript
-type MediaType = "image" | "video"
+type MediaType = 'image' | 'video'
 
 interface GalleryItem {
   id: string
@@ -47,22 +47,22 @@ Step 03 — Storage (SQLite)
 - [ ] 03.02 Persist items with local URIs for offline access
 
 ```typescript
-import * as SQLite from "expo-sqlite"
+import * as SQLite from 'expo-sqlite'
 
-const db = SQLite.openDatabase("love-duo.db")
+const db = SQLite.openDatabase('love-duo.db')
 
 const ensureGalleryTables = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(
-      (tx) => {
+      tx => {
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS gallery (id TEXT PRIMARY KEY, title TEXT, uri TEXT, type TEXT, createdAt TEXT)"
+          'CREATE TABLE IF NOT EXISTS gallery (id TEXT PRIMARY KEY, title TEXT, uri TEXT, type TEXT, createdAt TEXT)'
         )
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS album (id TEXT PRIMARY KEY, title TEXT, coverItemId TEXT, createdAt TEXT)"
+          'CREATE TABLE IF NOT EXISTS album (id TEXT PRIMARY KEY, title TEXT, coverItemId TEXT, createdAt TEXT)'
         )
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS album_items (albumId TEXT, itemId TEXT)"
+          'CREATE TABLE IF NOT EXISTS album_items (albumId TEXT, itemId TEXT)'
         )
       },
       reject,
@@ -90,12 +90,12 @@ Step 06 — Screens & navigation
 - [ ] 06.02 Navigation routes: list → detail → add
 
 ```typescript
-type GalleryRoute = "GalleryGrid" | "AlbumCreate" | "AlbumDetail"
+type GalleryRoute = 'GalleryGrid' | 'AlbumCreate' | 'AlbumDetail'
 
 const GALLERY_ROUTES: GalleryRoute[] = [
-  "GalleryGrid",
-  "AlbumCreate",
-  "AlbumDetail",
+  'GalleryGrid',
+  'AlbumCreate',
+  'AlbumDetail'
 ]
 
 export { GALLERY_ROUTES }
@@ -112,14 +112,14 @@ Step 08 — Validation (zod)
 - [ ] 08.02 Only allow `image` or `video`
 
 ```typescript
-import { z } from "zod"
+import { z } from 'zod'
 
 const itemSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
   uri: z.string().min(1),
-  type: z.enum(["image", "video"]),
-  createdAt: z.string().min(1),
+  type: z.enum(['image', 'video']),
+  createdAt: z.string().min(1)
 })
 
 export { itemSchema }

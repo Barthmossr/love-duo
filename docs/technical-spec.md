@@ -139,9 +139,9 @@ flowchart TD
 
 ```ts
 // state/sync.slice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type AuthStatus = "loggedOut" | "loggedIn"
+type AuthStatus = 'loggedOut' | 'loggedIn'
 
 interface SyncState {
   enabled: boolean
@@ -153,12 +153,12 @@ interface SyncState {
 const initialState: SyncState = {
   enabled: false,
   isPaired: false,
-  userAAuth: "loggedOut",
-  userBAuth: "loggedOut",
+  userAAuth: 'loggedOut',
+  userBAuth: 'loggedOut'
 }
 
 const syncSlice = createSlice({
-  name: "sync",
+  name: 'sync',
   initialState,
   reducers: {
     setPaired(state, action: PayloadAction<boolean>) {
@@ -172,10 +172,10 @@ const syncSlice = createSlice({
     },
     evaluateGate(state) {
       const bothLoggedIn =
-        state.userAAuth === "loggedIn" && state.userBAuth === "loggedIn"
+        state.userAAuth === 'loggedIn' && state.userBAuth === 'loggedIn'
       state.enabled = state.isPaired && bothLoggedIn
-    },
-  },
+    }
+  }
 })
 
 const selectSyncEnabled = (root: { sync: SyncState }): boolean =>
@@ -190,19 +190,19 @@ export {
   setPaired,
   setUserAAuth,
   setUserBAuth,
-  evaluateGate,
+  evaluateGate
 }
 ```
 
 ```ts
 // state/store.ts
-import { configureStore } from "@reduxjs/toolkit"
-import { syncSlice } from "./sync.slice"
+import { configureStore } from '@reduxjs/toolkit'
+import { syncSlice } from './sync.slice'
 
 const store = configureStore({
   reducer: {
-    sync: syncSlice.reducer,
-  },
+    sync: syncSlice.reducer
+  }
 })
 
 type RootState = ReturnType<typeof store.getState>
@@ -212,9 +212,9 @@ export { store, RootState }
 
 ```ts
 // sync/observer.functions.ts
-import { store } from "../state/store"
-import { selectSyncEnabled } from "../state/sync.slice"
-import { applySyncMode } from "../sync/gate.functions"
+import { store } from '../state/store'
+import { selectSyncEnabled } from '../state/sync.slice'
+import { applySyncMode } from '../sync/gate.functions'
 
 const observeSync = (): void => {
   let last = selectSyncEnabled(store.getState())
@@ -254,7 +254,7 @@ export { UserProfile, CoupleProfile }
 
 ```ts
 // types/album.types.ts
-type AlbumCategory = "trip" | "place" | "specialMoment" | "custom"
+type AlbumCategory = 'trip' | 'place' | 'specialMoment' | 'custom'
 
 interface PhotoItem {
   id: string
@@ -279,7 +279,7 @@ export { Album, PhotoItem, AlbumCategory }
 
 ```ts
 // types/date.types.ts
-type CostRange = "$" | "$$" | "$$$" | "free"
+type CostRange = '$' | '$$' | '$$$' | 'free'
 
 interface DateSuggestion {
   id: string
@@ -317,7 +317,6 @@ export { DateSuggestion, PlannedDate, CompletedDate, CostRange }
 - Base URL: `https://api.loveduo.app/v1`
 - Auth: Bearer token after Gmail OAuth; couple code used for pairing
 - Endpoints
-
   - `POST /couples`
     - Request: `{ coupleName: string }`
     - Response: `{ id: string, coupleCode: string }`
@@ -343,7 +342,6 @@ export { DateSuggestion, PlannedDate, CompletedDate, CostRange }
 - Coverage: 100% on core modules; CI gate on `develop`
 
 - Commands
-
   - `npm run test:unit`
   - `npm run test:integration`
   - `npm run test:e2e`
@@ -360,7 +358,6 @@ export { DateSuggestion, PlannedDate, CompletedDate, CostRange }
   - Build APK/AAB for dev: `eas build --profile development --platform android`
   - Install on device/emulator via `adb install`
 - Production build (future)
-
   - `eas build --profile production --platform android`
   - Submit: `eas submit --platform android`
 
@@ -375,27 +372,27 @@ export { DateSuggestion, PlannedDate, CompletedDate, CostRange }
 
 ```ts
 // app.config.ts
-import { ConfigContext, ExpoConfig } from "@expo/config"
+import { ConfigContext, ExpoConfig } from '@expo/config'
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Love Duo",
-  slug: "love-duo",
-  scheme: "loveduo",
+  name: 'Love Duo',
+  slug: 'love-duo',
+  scheme: 'loveduo',
   android: {
-    package: "app.loveduo.mobile",
-    permissions: ["READ_MEDIA_IMAGES"],
-    icon: "./assets/android-icon.png",
+    package: 'app.loveduo.mobile',
+    permissions: ['READ_MEDIA_IMAGES'],
+    icon: './assets/android-icon.png'
   },
   plugins: [
-    "expo-router",
-    "expo-image",
-    "expo-media-library",
-    "expo-image-picker",
-    "expo-file-system",
-    "expo-secure-store",
-    "expo-sqlite",
-  ],
+    'expo-router',
+    'expo-image',
+    'expo-media-library',
+    'expo-image-picker',
+    'expo-file-system',
+    'expo-secure-store',
+    'expo-sqlite'
+  ]
 })
 ```
 
@@ -431,7 +428,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 ### 9.5 Local Storage Strategy
 
 - Usage policy
-
   - Use SQLite as the primary local storage mechanism both before and after authentication
   - Trigger cloud sync only after both users are authenticated and paired, layering remote sync on top of local SQLite storage
   - Retain all data locally prior to sync; no remote calls
@@ -448,14 +444,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 
 ```ts
 // storage/sqlite.ts
-import * as SQLite from "expo-sqlite"
+import * as SQLite from 'expo-sqlite'
 
-const db = SQLite.openDatabase("love_duo.db")
+const db = SQLite.openDatabase('love_duo.db')
 
 const init = (): Promise<void> =>
   new Promise((resolve, reject) => {
     db.transaction(
-      (tx) => {
+      tx => {
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS couple(
           id TEXT PRIMARY KEY,
@@ -486,7 +482,7 @@ const init = (): Promise<void> =>
         )
         resolve()
       },
-      (error) => reject(error)
+      error => reject(error)
     )
   })
 
@@ -499,9 +495,9 @@ export { db, init }
 
 ```ts
 // services/code.functions.ts
-import { customAlphabet } from "nanoid"
+import { customAlphabet } from 'nanoid'
 
-const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 const LENGTH = 6
 
 const generateCoupleCode = (): string => {
@@ -628,11 +624,11 @@ ensuring alignment with security guidelines in section 9.4.
 
 ```ts
 // env/env.ts
-import { z } from "zod"
+import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "staging", "production"]),
-  LOG_LEVEL: z.enum(["error", "warn", "info", "debug"]).default("info"),
+  NODE_ENV: z.enum(['development', 'staging', 'production']),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info')
 })
 
 const env = envSchema.parse(process.env)
@@ -662,7 +658,7 @@ stateDiagram-v2
 
 ```ts
 // sync/gate.functions.ts
-type AuthStatus = "loggedOut" | "loggedIn"
+type AuthStatus = 'loggedOut' | 'loggedIn'
 
 interface CoupleSyncGateInput {
   isPaired: boolean
@@ -672,7 +668,7 @@ interface CoupleSyncGateInput {
 
 const isSyncEnabled = (input: CoupleSyncGateInput): boolean => {
   const bothLoggedIn =
-    input.userAAuth === "loggedIn" && input.userBAuth === "loggedIn"
+    input.userAAuth === 'loggedIn' && input.userBAuth === 'loggedIn'
   return input.isPaired && bothLoggedIn
 }
 

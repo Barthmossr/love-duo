@@ -20,7 +20,7 @@ Step 02 — Types & data model
 - [ ] 02.01 Create `dates.types.ts` with core interfaces
 
 ```typescript
-type DateCategory = "outdoor" | "indoor" | "food" | "culture"
+type DateCategory = 'outdoor' | 'indoor' | 'food' | 'culture'
 
 interface DateSuggestion {
   id: string
@@ -46,19 +46,19 @@ Step 03 — Storage (SQLite)
 - [ ] 03.02 Persist accept/regenerate history
 
 ```typescript
-import * as SQLite from "expo-sqlite"
+import * as SQLite from 'expo-sqlite'
 
-const db = SQLite.openDatabase("love-duo.db")
+const db = SQLite.openDatabase('love-duo.db')
 
 const ensureDateTables = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(
-      (tx) => {
+      tx => {
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS date_suggestions (id TEXT PRIMARY KEY, title TEXT, subtitle TEXT, category TEXT)"
+          'CREATE TABLE IF NOT EXISTS date_suggestions (id TEXT PRIMARY KEY, title TEXT, subtitle TEXT, category TEXT)'
         )
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS scheduled_dates (id TEXT PRIMARY KEY, suggestionId TEXT, scheduledAt TEXT, completedAt TEXT, notes TEXT)"
+          'CREATE TABLE IF NOT EXISTS scheduled_dates (id TEXT PRIMARY KEY, suggestionId TEXT, scheduledAt TEXT, completedAt TEXT, notes TEXT)'
         )
       },
       reject,
@@ -86,13 +86,13 @@ Step 06 — Screens & navigation
 - [ ] 06.02 Navigation guards: only schedule after accept
 
 ```typescript
-type DatesRoute = "SuggestionsDeck" | "DateDetail" | "Schedule" | "History"
+type DatesRoute = 'SuggestionsDeck' | 'DateDetail' | 'Schedule' | 'History'
 
 const DATES_ROUTES: DatesRoute[] = [
-  "SuggestionsDeck",
-  "DateDetail",
-  "Schedule",
-  "History",
+  'SuggestionsDeck',
+  'DateDetail',
+  'Schedule',
+  'History'
 ]
 
 export { DATES_ROUTES }
@@ -104,20 +104,20 @@ Step 07 — Validation (zod)
 - [ ] 07.02 Scheduling date must be in the future
 
 ```typescript
-import { z } from "zod"
+import { z } from 'zod'
 
 const suggestionSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
   subtitle: z.string().min(1),
-  category: z.enum(["outdoor", "indoor", "food", "culture"]),
+  category: z.enum(['outdoor', 'indoor', 'food', 'culture'])
 })
 
 const scheduleSchema = z.object({
   suggestionId: z.string().min(1),
   scheduledAt: z
     .string()
-    .refine((v) => new Date(v).getTime() > Date.now(), "Must be future"),
+    .refine(v => new Date(v).getTime() > Date.now(), 'Must be future')
 })
 
 export { suggestionSchema, scheduleSchema }

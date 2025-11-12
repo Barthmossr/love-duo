@@ -61,41 +61,41 @@ Step 05 — ESLint and Prettier setup
 
   ```js
   // eslint.config.js
-  import typescriptPlugin from "@typescript-eslint/eslint-plugin"
-  import typescriptParser from "@typescript-eslint/parser"
-  import importPlugin from "eslint-plugin-import"
+  import typescriptPlugin from '@typescript-eslint/eslint-plugin'
+  import typescriptParser from '@typescript-eslint/parser'
+  import importPlugin from 'eslint-plugin-import'
 
   export default [
     {
-      files: ["**/*.ts", "**/*.tsx"],
+      files: ['**/*.ts', '**/*.tsx'],
       languageOptions: {
         parser: typescriptParser,
-        parserOptions: { project: ["./tsconfig.json"] },
+        parserOptions: { project: ['./tsconfig.json'] }
       },
       plugins: {
-        "@typescript-eslint": typescriptPlugin,
-        import: importPlugin,
+        '@typescript-eslint': typescriptPlugin,
+        import: importPlugin
       },
       rules: {
-        "import/order": [
-          "error",
+        'import/order': [
+          'error',
           {
             groups: [
-              "builtin",
-              "external",
-              "internal",
-              ["parent", "sibling"],
-              "index",
+              'builtin',
+              'external',
+              'internal',
+              ['parent', 'sibling'],
+              'index'
             ],
-            "newlines-between": "always",
-            alphabetize: { order: "asc" },
-          },
+            'newlines-between': 'always',
+            alphabetize: { order: 'asc' }
+          }
         ],
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "@typescript-eslint/no-unused-vars": "error",
-      },
-    },
+        '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/explicit-function-return-type': 'error',
+        '@typescript-eslint/no-unused-vars': 'error'
+      }
+    }
   ]
   ```
 
@@ -168,14 +168,14 @@ Step 07 — Environment variables
 - [ ] 07.02 Add `env.ts` with validation schema (using `zod`)
 
 ```typescript
-import { z } from "zod"
+import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "staging", "production"]),
+  NODE_ENV: z.enum(['development', 'staging', 'production']),
   PORT: z.string().transform(Number),
   DATABASE_URL: z.string().url(),
   API_KEY: z.string().min(1),
-  LOG_LEVEL: z.enum(["error", "warn", "info", "debug"]),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug'])
 })
 
 export const env = envSchema.parse(process.env)
@@ -241,7 +241,6 @@ Step 10 — Validation
 Step 11 — CI/CD workflows (separated)
 
 - [ ] 11.01 Add GitHub secrets (as needed)
-
   - `EXPO_TOKEN` if publishing is handled in deploy phase
 
 - [ ] 11.02 Create validation workflow `.github/workflows/validate.yml`
@@ -303,17 +302,17 @@ Step 13 — SQLite configuration
 - [ ] 13.02 Initialize database and tables
 
   ```typescript
-  import { openDatabase, SQLiteDatabase } from "expo-sqlite"
+  import { openDatabase, SQLiteDatabase } from 'expo-sqlite'
 
   const getDatabase = (): SQLiteDatabase => {
-    return openDatabase("love-duo.db")
+    return openDatabase('love-duo.db')
   }
 
   const ensureTables = (db: SQLiteDatabase): Promise<void> => {
     return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
+      db.transaction(tx => {
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY NOT NULL, key TEXT NOT NULL, value TEXT)",
+          'CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY NOT NULL, key TEXT NOT NULL, value TEXT)',
           [],
           () => resolve(),
           (_, error) => {
@@ -338,8 +337,8 @@ Step 14 — DB sync for testing (Supabase)
 - [ ] 14.02 Fetch and seed local SQLite for tests
 
   ```typescript
-  import { createClient } from "@supabase/supabase-js"
-  import { openDatabase, SQLiteDatabase } from "expo-sqlite"
+  import { createClient } from '@supabase/supabase-js'
+  import { openDatabase, SQLiteDatabase } from 'expo-sqlite'
 
   interface GalleryItem {
     id: string
@@ -348,14 +347,14 @@ Step 14 — DB sync for testing (Supabase)
 
   const syncGallery = async (url: string, key: string): Promise<void> => {
     const client = createClient(url, key)
-    const db = SQLite.openDatabase("love-duo.db")
-    const { data, error } = await client.from("gallery").select("id,title")
+    const db = SQLite.openDatabase('love-duo.db')
+    const { data, error } = await client.from('gallery').select('id,title')
     if (error) throw new Error(error.message)
     await new Promise<void>((resolve, reject) => {
       db.transaction(
-        (tx) => {
+        tx => {
           tx.executeSql(
-            "DELETE FROM gallery",
+            'DELETE FROM gallery',
             [],
             () => {},
             (_, e) => {
@@ -365,7 +364,7 @@ Step 14 — DB sync for testing (Supabase)
           )
           data.forEach((item: GalleryItem) => {
             tx.executeSql(
-              "INSERT INTO gallery (id, title) VALUES (?, ?)",
+              'INSERT INTO gallery (id, title) VALUES (?, ?)',
               [item.id, item.title],
               () => {},
               (_, e) => {
