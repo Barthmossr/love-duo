@@ -44,11 +44,11 @@ jobs:
       - name: Publish to channel
         run: |
           if [ "${GITHUB_REF##*/}" = "develop" ]; then
-            npx expo publish --non-interactive --no-wait --release-channel dev
+            npx eas update --branch dev --message "Deploy from develop"
           elif [ "${GITHUB_REF##*/}" = "staging" ]; then
-            npx expo publish --non-interactive --no-wait --release-channel staging
+            npx eas update --branch staging --message "Deploy from staging"
           else
-            npx expo publish --non-interactive --no-wait --release-channel production
+            npx eas update --branch production --message "Deploy from main"
           fi
 ```
 
