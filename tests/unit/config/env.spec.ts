@@ -38,4 +38,20 @@ describe('env validation', () => {
     process.env.EXPO_PUBLIC_API_URL = previousUrl
     process.env.NODE_ENV = previousNodeEnv
   })
+
+  test('respects provided LOG_LEVEL values', () => {
+    const previousNodeEnv = process.env.NODE_ENV
+    const previousLogLevel = process.env.LOG_LEVEL
+    const hadApiUrl = Object.prototype.hasOwnProperty.call(
+      process.env,
+      'EXPO_PUBLIC_API_URL'
+    )
+    process.env.NODE_ENV = 'test'
+    process.env.LOG_LEVEL = 'debug'
+    if (hadApiUrl) delete process.env.EXPO_PUBLIC_API_URL
+    const env = getEnv()
+    expect(env.LOG_LEVEL).toBe('debug')
+    process.env.LOG_LEVEL = previousLogLevel
+    process.env.NODE_ENV = previousNodeEnv
+  })
 })
