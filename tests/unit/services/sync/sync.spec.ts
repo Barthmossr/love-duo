@@ -30,4 +30,15 @@ describe('sync settings from supabase', () => {
     expect(theme).toBe('dark')
     expect(language).toBe('en')
   })
+
+  it('should throw when supabase returns error', async () => {
+    const db = createMockDb({
+      executedSql: [],
+      settings: {}
+    }) as unknown as SQLiteDatabase
+    const client: SupabaseClientMock = createErrorSupabaseClientMock('failed')
+    await expect(syncSettingsFromSupabase(db, client)).rejects.toThrow(
+      'Failed to sync settings'
+    )
+  })
 })
