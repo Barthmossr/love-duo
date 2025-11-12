@@ -41,4 +41,15 @@ describe('sync settings from supabase', () => {
       'Failed to sync settings'
     )
   })
+
+  it('should throw when data is invalid', async () => {
+    const db = createMockDb({
+      executedSql: [],
+      settings: {}
+    }) as unknown as SQLiteDatabase
+    const client = createSupabaseClientMock([{ wrong: 'shape' }])
+    await expect(syncSettingsFromSupabase(db, client)).rejects.toThrow(
+      'Failed to sync settings'
+    )
+  })
 })
