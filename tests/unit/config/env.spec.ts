@@ -17,4 +17,15 @@ describe('env validation', () => {
       delete process.env.LOG_LEVEL
     }
   })
+
+  test('validates EXPO_PUBLIC_API_URL as a URL', () => {
+    const previousNodeEnv = process.env.NODE_ENV
+    const previousUrl = process.env.EXPO_PUBLIC_API_URL
+    process.env.NODE_ENV = 'test'
+    process.env.EXPO_PUBLIC_API_URL = 'https://example.com'
+    const env = getEnv()
+    expect(env.EXPO_PUBLIC_API_URL).toBe('https://example.com')
+    process.env.EXPO_PUBLIC_API_URL = previousUrl
+    process.env.NODE_ENV = previousNodeEnv
+  })
 })
