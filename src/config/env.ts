@@ -15,7 +15,9 @@ const envSchema = z.object({
   LOG_LEVEL: z.preprocess(val => {
     return typeof val === 'string' && val.length > 0 ? val : undefined
   }, z.enum(logLevelValues).default('info')),
-  EXPO_PUBLIC_API_URL: z.string().url().optional()
+  EXPO_PUBLIC_API_URL: z.string().url().optional(),
+  EXPO_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional()
 })
 
 const getEnv = (): Env => {

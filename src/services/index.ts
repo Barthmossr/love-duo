@@ -4,5 +4,12 @@ import {
   insertSetting,
   querySettingValue
 } from './database'
+import { syncSettingsFromSupabase } from './sync'
 
-export { ensureTables, getDatabase, insertSetting, querySettingValue }
+export {
+  ensureTables,
+  getDatabase,
+  insertSetting,
+  querySettingValue,
+  syncSettingsFromSupabase
+}
