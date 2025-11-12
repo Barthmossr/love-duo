@@ -56,4 +56,9 @@ describe('database ensureTables', () => {
       'Failed to create tables'
     )
   })
+
+  it('should open database using sync API', () => {
+    const db = getDatabase()
+    expect(typeof db).toBe('object')
+  })
 })
