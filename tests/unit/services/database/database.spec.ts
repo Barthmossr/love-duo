@@ -70,4 +70,11 @@ describe('database ensureTables', () => {
     const value = await querySettingValue(db, 'theme')
     expect(value).toBe('dark')
   })
+
+  it('should return null for missing setting key', async () => {
+    const ctx: MockTransactionContext = { executedSql: [], settings: {} }
+    const db = createMockDb(ctx)
+    const value = await querySettingValue(db, 'missing')
+    expect(value).toBeNull()
+  })
 })
