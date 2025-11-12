@@ -77,4 +77,21 @@ describe('database ensureTables', () => {
     const value = await querySettingValue(db, 'missing')
     expect(value).toBeNull()
   })
+
+  it('should return zero changes in runAsync fallback', async () => {
+    const ctx: MockTransactionContext = { executedSql: [], settings: {} }
+    const db = createMockDb(ctx)
+    const result = await (
+      db as unknown as {
+        runAsync: (
+          sql: string,
+          params: [string, string]
+        ) => Promise<{ changes: number }>
+      }
+    ).runAsync('UPDATE settings SET value = ? WHERE key = ?', [
+      'theme',
+      'light'
+    ])
+    expect(result.changes).toBe(0)
+  })
 })
