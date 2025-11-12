@@ -52,4 +52,12 @@ describe('sync settings from supabase', () => {
       'Failed to sync settings'
     )
   })
+
+  it('should do nothing when supabase returns empty data', async () => {
+    const ctx = { executedSql: [], settings: {} }
+    const db = createMockDb(ctx) as unknown as SQLiteDatabase
+    const client = createSupabaseClientMock(null)
+    await syncSettingsFromSupabase(db, client)
+    expect(Object.keys(ctx.settings).length).toBe(0)
+  })
 })
