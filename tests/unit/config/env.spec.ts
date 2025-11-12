@@ -1,7 +1,7 @@
 import { getEnv } from '@/config'
 
 describe('env validation', () => {
-  test('allows test environment and defaults log level', () => {
+  it('should allow test environment and default log level', () => {
     const previousNodeEnv = process.env.NODE_ENV
     const hadLogLevel = Object.prototype.hasOwnProperty.call(
       process.env,
@@ -18,7 +18,7 @@ describe('env validation', () => {
     }
   })
 
-  test('validates EXPO_PUBLIC_API_URL as a URL', () => {
+  it('should validate EXPO_PUBLIC_API_URL as a URL', () => {
     const previousNodeEnv = process.env.NODE_ENV
     const previousUrl = process.env.EXPO_PUBLIC_API_URL
     process.env.NODE_ENV = 'test'
@@ -29,7 +29,7 @@ describe('env validation', () => {
     process.env.NODE_ENV = previousNodeEnv
   })
 
-  test('throws when EXPO_PUBLIC_API_URL is invalid', () => {
+  it('should throw when EXPO_PUBLIC_API_URL is invalid', () => {
     const previousNodeEnv = process.env.NODE_ENV
     const previousUrl = process.env.EXPO_PUBLIC_API_URL
     process.env.NODE_ENV = 'test'
@@ -39,7 +39,7 @@ describe('env validation', () => {
     process.env.NODE_ENV = previousNodeEnv
   })
 
-  test('respects provided LOG_LEVEL values', () => {
+  it('should respect provided LOG_LEVEL values', () => {
     const previousNodeEnv = process.env.NODE_ENV
     const previousLogLevel = process.env.LOG_LEVEL
     const hadApiUrl = Object.prototype.hasOwnProperty.call(
