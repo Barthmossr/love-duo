@@ -22,6 +22,12 @@ implementation/
 - Names follow `NN-name` where `name` is lowercase with underscores
 - Only rename directories to change order; preserve phase content
 
+## Step 00 — Version Control Pattern
+
+- Each phase README begins with Step `00` for version control
+- Branch naming: `feature/<phase-name>` (e.g., `feature/onboarding`)
+- Suggested commits are listed per phase to keep changes atomic
+
 ## Naming Conventions
 
 - Lowercase with underscores for `name` after the prefix
@@ -35,13 +41,16 @@ implementation/
 - `04-dates` → depends on `03-our-gallery` baseline patterns and shared components
 - `05-deploy` → depends on all features and finalized configuration
 
-## Validation
+## CI/CD & Validation
 
-- Run `node docs/implementation/validate-order.js` to verify numbering
-- Fails on invalid names, duplicate numbers, or gaps in sequence
-- Include this check in CI to enforce consistency
-- Run `node docs/implementation/validate-commitlint.js` to verify commitlint setup
-- Fails if config or hook is missing or misconfigured
+- Workflows are separated:
+  - `validate.yml` (PRs): runs `npm run validate` (eslint, prettier, type-check, expo prebuild)
+  - `tests.yml` (PRs & pushes): runs coverage and uploads artifacts
+- Expo publish is documented under `05-deploy` with branch → channel mapping
+- Numbering validation:
+  - `node docs/implementation/validate-order.js` verifies phase numbering
+- Commit message validation:
+  - `node docs/implementation/validate-commitlint.js` verifies commitlint config and hook
 
 ## Version Control Considerations
 
