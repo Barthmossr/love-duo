@@ -142,4 +142,16 @@ describe('database ensureTables', () => {
       'Failed to insert setting'
     )
   })
+
+  it('should throw on query failure', async () => {
+    const failingDb = {
+      getFirstAsync: async (): Promise<null> => {
+        throw new Error('boom')
+      }
+    } as unknown as SQLiteDatabase
+
+    await expect(querySettingValue(failingDb, 'theme')).rejects.toThrow(
+      'Failed to query setting'
+    )
+  })
 })
