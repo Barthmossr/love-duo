@@ -330,9 +330,9 @@ Step 13 — SQLite configuration
 
 Step 14 — DB sync for testing (Supabase)
 
-- [ ] 14.01 Add environment variables
+- [x] 14.01 Add environment variables
   - `SUPABASE_URL`, `SUPABASE_ANON_KEY`
-- [ ] 14.02 Fetch and seed local SQLite for tests
+- [x] 14.02 Fetch and seed local SQLite for tests
 
   ```typescript
   import { createClient } from '@supabase/supabase-js'
