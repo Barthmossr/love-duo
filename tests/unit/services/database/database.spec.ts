@@ -94,4 +94,18 @@ describe('database ensureTables', () => {
     ])
     expect(result.changes).toBe(0)
   })
+
+  it('should return null in getFirstAsync fallback', async () => {
+    const ctx: MockTransactionContext = { executedSql: [], settings: {} }
+    const db = createMockDb(ctx)
+    const result = await (
+      db as unknown as {
+        getFirstAsync: <T>(sql: string, params: [string]) => Promise<T | null>
+      }
+    ).getFirstAsync<{ value: string }>(
+      'SELECT value FROM other WHERE key = ?',
+      ['x']
+    )
+    expect(result).toBeNull()
+  })
 })
