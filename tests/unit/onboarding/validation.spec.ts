@@ -16,4 +16,12 @@ describe('onboarding validation', () => {
     })
     expect(result.success).toBe(false)
   })
+
+  it('should reject short password', () => {
+    const result = credentialsSchema.safeParse({
+      email: 'user@example.com',
+      password: 'short'
+    })
+    expect(result.success).toBe(false)
+  })
 })
