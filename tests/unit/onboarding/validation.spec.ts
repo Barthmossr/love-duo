@@ -32,4 +32,12 @@ describe('onboarding validation', () => {
       expect(result.success).toBe(true)
     })
   })
+
+  it('should reject invalid couple codes', () => {
+    const invalid = ['abcdef', 'ABC12', 'OOOOOO', '123456', 'ABCD1O']
+    invalid.forEach(code => {
+      const result = coupleCodeSchema.safeParse(code)
+      expect(result.success).toBe(false)
+    })
+  })
 })
