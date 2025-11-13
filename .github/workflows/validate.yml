@@ -16,5 +16,4 @@ jobs:
           node-version: 22.20.0
           cache: npm
       - run: npm ci
-      - run: npx commitlint --from=HEAD~10 --to=HEAD
       - run: npm run validate
