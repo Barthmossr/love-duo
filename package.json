@@ -19,6 +19,7 @@
     "test:e2e": "jest --testPathPattern=tests/e2e",
     "test:a11y": "jest --testPathPattern=tests/a11y",
     "test:watch": "jest --watch",
+    "test:onboarding": "jest --testPathPattern=tests/unit/onboarding",
     "debug": "node --inspect-brk dist/main.js",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
