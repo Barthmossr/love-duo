@@ -18,6 +18,9 @@ yarn-error.*
 *.pem
 .env
 .env*.local
+.env.development
+.env.staging
+.env.production
 *.tsbuildinfo
 /coverage/
 /ios
