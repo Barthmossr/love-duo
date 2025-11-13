@@ -6,34 +6,33 @@
 
 Step 00 — Version Control (do this first)
 
-- [ ] 00.01 Create and switch to branch `feature/setup`
-- [ ] 00.02 Commit atomically after every single checkbox below (suggested messages only)
+- [x] 00.01 Create and switch to branch `feature/setup`
+- [x] 00.02 Commit atomically after every single checkbox below (suggested messages only)
   - Suggestions: `chore: tooling setup`, `chore: android sdk config`, etc.
 
 Step 01 — System prerequisites
 
-- [ ] 01.01 Windows updates applied and rebooted
-- [ ] 01.02 Git installed (`git --version`)
-- [ ] 01.03 Node `22.x` installed (`node -v`), npm `11.x` (`npm -v`)
-- [ ] 01.04 Java JDK `17+` installed (`java -version`)
-- [ ] 01.05 Android Studio installed with SDK Platform `Android 14` and Build-Tools
+- [x] 01.01 Windows updates applied and rebooted
+- [x] 01.02 Git installed (`git --version`)
+- [x] 01.03 Node `22.x` installed (`node -v`), npm `11.x` (`npm -v`)
+- [x] 01.04 Java JDK `17+` installed (`java -version`)
+- [x] 01.05 Android Studio installed with SDK Platform `Android 14` and Build-Tools
 
 Step 02 — Android SDK and AVD setup
 
-- [ ] 02.01 Set `ANDROID_HOME` and add SDK `platform-tools` to `PATH`
-- [ ] 02.02 Verify `adb devices` shows emulator/device
-- [ ] 02.03 Create AVD (Pixel 6, Android 14) and boot once
+- [x] 02.01 Set `ANDROID_HOME` and add SDK `platform-tools` to `PATH`
+- [x] 02.02 Verify `adb devices` shows emulator/device
 
 Step 03 — Project bootstrap
 
-- [ ] 03.01 Initialize Expo app (if new) using TypeScript
+- [x] 03.01 Initialize Expo app (if new) using TypeScript
   - `npx create-expo-app@latest --template expo-template-blank-typescript`
-- [ ] 03.02 Install dependencies with exact versions
+- [x] 03.02 Install dependencies with exact versions
   - `npm ci` for existing lockfile or `npm i --save-exact <pkgs>`
 
 Step 04 — TypeScript configuration
 
-- [ ] 04.01 Add strict options in `tsconfig.json`
+- [x] 04.01 Add strict options in `tsconfig.json`
 
   ```json
   {
@@ -57,49 +56,49 @@ Step 04 — TypeScript configuration
 
 Step 05 — ESLint and Prettier setup
 
-- [ ] 05.01 Use ESLint flat config (v9+)
+- [x] 05.01 Use ESLint flat config (v9+)
 
   ```js
   // eslint.config.js
-  import typescriptPlugin from "@typescript-eslint/eslint-plugin"
-  import typescriptParser from "@typescript-eslint/parser"
-  import importPlugin from "eslint-plugin-import"
+  import typescriptPlugin from '@typescript-eslint/eslint-plugin'
+  import typescriptParser from '@typescript-eslint/parser'
+  import importPlugin from 'eslint-plugin-import'
 
   export default [
     {
-      files: ["**/*.ts", "**/*.tsx"],
+      files: ['**/*.ts', '**/*.tsx'],
       languageOptions: {
         parser: typescriptParser,
-        parserOptions: { project: ["./tsconfig.json"] },
+        parserOptions: { project: ['./tsconfig.json'] }
       },
       plugins: {
-        "@typescript-eslint": typescriptPlugin,
-        import: importPlugin,
+        '@typescript-eslint': typescriptPlugin,
+        import: importPlugin
       },
       rules: {
-        "import/order": [
-          "error",
+        'import/order': [
+          'error',
           {
             groups: [
-              "builtin",
-              "external",
-              "internal",
-              ["parent", "sibling"],
-              "index",
+              'builtin',
+              'external',
+              'internal',
+              ['parent', 'sibling'],
+              'index'
             ],
-            "newlines-between": "always",
-            alphabetize: { order: "asc" },
-          },
+            'newlines-between': 'always',
+            alphabetize: { order: 'asc' }
+          }
         ],
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "@typescript-eslint/no-unused-vars": "error",
-      },
-    },
+        '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/explicit-function-return-type': 'error',
+        '@typescript-eslint/no-unused-vars': 'error'
+      }
+    }
   ]
   ```
 
-- [ ] 05.02 Add Prettier config
+- [x] 05.02 Add Prettier config
 
   ```json
   {
@@ -114,11 +113,11 @@ Step 05 — ESLint and Prettier setup
 
 Step 06 — Husky and lint-staged
 
-- [ ] 06.01 Initialize Husky
+- [x] 06.01 Initialize Husky
   - `npx husky init`
-- [ ] 06.02 Configure commit message linting
+- [x] 06.02 Configure commit message linting
   - `echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg`
-- [ ] 06.03 Add lint-staged configuration
+- [x] 06.03 Add lint-staged configuration
 
   ```json
   // .lintstagedrc
@@ -128,7 +127,7 @@ Step 06 — Husky and lint-staged
   }
   ```
 
-- [ ] 06.04 Pre-commit hook commands
+- [x] 06.04 Pre-commit hook commands
 
   ```sh
   # .husky/pre-commit
@@ -137,14 +136,14 @@ Step 06 — Husky and lint-staged
   npx --no -- lint-staged
   ```
 
-- [ ] 06.05 Pre-push hook to enforce 100% coverage
+- [x] 06.05 Pre-push hook to enforce 100% coverage
 
   ```sh
   # .husky/pre-push
   npm run test:coverage
   ```
 
-- [ ] 06.06 Coverage enforcement via Jest config (in package.json)
+- [x] 06.06 Coverage enforcement via Jest config (in package.json)
 
   ```json
   {
@@ -164,18 +163,18 @@ Step 06 — Husky and lint-staged
 
 Step 07 — Environment variables
 
-- [ ] 07.01 Create `.env.example`, `.env.development`, `.env.staging`, `.env.production`
-- [ ] 07.02 Add `env.ts` with validation schema (using `zod`)
+- [x] 07.01 Create `.env.example`, `.env.development`, `.env.staging`, `.env.production`
+- [x] 07.02 Add `env.ts` with validation schema (using `zod`)
 
 ```typescript
-import { z } from "zod"
+import { z } from 'zod'
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "staging", "production"]),
+  NODE_ENV: z.enum(['development', 'staging', 'production']),
   PORT: z.string().transform(Number),
   DATABASE_URL: z.string().url(),
   API_KEY: z.string().min(1),
-  LOG_LEVEL: z.enum(["error", "warn", "info", "debug"]),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug'])
 })
 
 export const env = envSchema.parse(process.env)
@@ -183,7 +182,7 @@ export const env = envSchema.parse(process.env)
 
 Step 08 — NPM scripts
 
-- [ ] 08.01 Add scripts to `package.json`
+- [x] 08.01 Add scripts to `package.json`
   ```json
   {
     "scripts": {
@@ -206,45 +205,44 @@ Step 08 — NPM scripts
       "lint:fix": "eslint . --ext .ts,.tsx --fix",
       "format": "prettier --write .",
       "format:check": "prettier --check .",
-      "type-check": "tsc --noEmit"
+      "type-check": "tsc --noEmit",
+      "doctor": "npx expo-doctor"
     }
   }
   ```
 
 Step 09 — Commitlint
 
-- [ ] 09.01 Install dev dependencies
+- [x] 09.01 Install dev dependencies
   - `npm i --save-exact -D @commitlint/cli @commitlint/config-conventional`
-- [ ] 09.02 Add configuration file
+- [x] 09.02 Add configuration file
   - Ensure `commitlint.config.js` exists at the repo root
-- [ ] 09.03 Initialize Husky
+- [x] 09.03 Initialize Husky
   - `npx husky init`
-- [ ] 09.04 Add `commit-msg` hook
+- [x] 09.04 Add `commit-msg` hook
   - `echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg`
-- [ ] 09.05 Validate a test message locally
+- [x] 09.05 Validate a test message locally
   - `echo "foo: test" | npx commitlint` should fail
   - `echo "feat: add onboarding flow" | npx commitlint` should pass
-- [ ] 09.06 CI enforcement
+- [x] 09.06 CI enforcement
   - Add a CI step to run `npx commitlint --from=HEAD~10 --to=HEAD`
-- [ ] 09.07 Keep numbering strict
-  - Maintain `01`–`09` order when updating steps; add `10` for new steps
 
 Step 10 — Validation
 
-- [ ] 10.01 `node -v` and `npm -v` match required versions
-- [ ] 10.02 `adb devices` lists at least one emulator/device
-- [ ] 10.03 `npm run type-check` passes
-- [ ] 10.04 `npm run lint` passes with no errors
-- [ ] 10.05 `npm run format:check` passes
-- [ ] 10.06 Expo app runs in emulator without runtime errors
+- [x] 10.01 `node -v` and `npm -v` match required versions
+- [x] 10.02 `adb devices` lists at least one emulator/device
+- [x] 10.03 `npm run type-check` passes
+- [x] 10.04 `npm run lint` passes with no errors
+- [x] 10.05 `npm run format:check` passes
+- [x] 10.06 Expo app runs in emulator without runtime errors
 
 Step 11 — CI/CD workflows (separated)
 
-- [ ] 11.01 Add GitHub secrets (as needed)
+- [x] 11.01 Add GitHub secrets (as needed)
+  - `EXPO_TOKEN` for EAS Update in deploy phase
+  - See `docs/guides/expo-token.md` for how to obtain and use the token
 
-  - `EXPO_TOKEN` if publishing is handled in deploy phase
-
-- [ ] 11.02 Create validation workflow `.github/workflows/validate.yml`
+- [x] 11.02 Create validation workflow `.github/workflows/validate.yml`
 
   ```yaml
   name: validate
@@ -267,7 +265,7 @@ Step 11 — CI/CD workflows (separated)
         - run: npm run validate
   ```
 
-- [ ] 12.03 Create tests workflow `.github/workflows/tests.yml`
+- [x] 12.03 Create tests workflow `.github/workflows/tests.yml`
 
   ```yaml
   name: tests
@@ -294,26 +292,28 @@ Step 11 — CI/CD workflows (separated)
             path: coverage
   ```
 
-- [ ] 12.04 Note on Expo publish
-  - Expo publish is documented in `05-deploy` and can be a separate workflow
+- [x] 12.04 Note on EAS Update
+  - Use EAS Update for publishing; see `05-deploy`
+  - Configure `EXPO_TOKEN` in GitHub secrets when enabling publish in CI
+  - See `docs/guides/expo-token.md` for steps to generate and use the token
 
 Step 13 — SQLite configuration
 
-- [ ] 13.01 Install dependency `expo-sqlite` with exact version
-- [ ] 13.02 Initialize database and tables
+- [x] 13.01 Install dependency `expo-sqlite` with exact version
+- [x] 13.02 Initialize database and tables
 
   ```typescript
-  import { openDatabase, SQLiteDatabase } from "expo-sqlite"
+  import { openDatabase, SQLiteDatabase } from 'expo-sqlite'
 
   const getDatabase = (): SQLiteDatabase => {
-    return openDatabase("love-duo.db")
+    return openDatabase('love-duo.db')
   }
 
   const ensureTables = (db: SQLiteDatabase): Promise<void> => {
     return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
+      db.transaction(tx => {
         tx.executeSql(
-          "CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY NOT NULL, key TEXT NOT NULL, value TEXT)",
+          'CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY NOT NULL, key TEXT NOT NULL, value TEXT)',
           [],
           () => resolve(),
           (_, error) => {
@@ -328,18 +328,18 @@ Step 13 — SQLite configuration
   export { getDatabase, ensureTables }
   ```
 
-- [ ] 13.03 Validation checklist
+- [x] 13.03 Validation checklist
   - Open db, create table, insert and query one row
 
 Step 14 — DB sync for testing (Supabase)
 
-- [ ] 14.01 Add environment variables
+- [x] 14.01 Add environment variables
   - `SUPABASE_URL`, `SUPABASE_ANON_KEY`
-- [ ] 14.02 Fetch and seed local SQLite for tests
+- [x] 14.02 Fetch and seed local SQLite for tests
 
   ```typescript
-  import { createClient } from "@supabase/supabase-js"
-  import { openDatabase, SQLiteDatabase } from "expo-sqlite"
+  import { createClient } from '@supabase/supabase-js'
+  import { openDatabase, SQLiteDatabase } from 'expo-sqlite'
 
   interface GalleryItem {
     id: string
@@ -348,14 +348,14 @@ Step 14 — DB sync for testing (Supabase)
 
   const syncGallery = async (url: string, key: string): Promise<void> => {
     const client = createClient(url, key)
-    const db = SQLite.openDatabase("love-duo.db")
-    const { data, error } = await client.from("gallery").select("id,title")
+    const db = SQLite.openDatabase('love-duo.db')
+    const { data, error } = await client.from('gallery').select('id,title')
     if (error) throw new Error(error.message)
     await new Promise<void>((resolve, reject) => {
       db.transaction(
-        (tx) => {
+        tx => {
           tx.executeSql(
-            "DELETE FROM gallery",
+            'DELETE FROM gallery',
             [],
             () => {},
             (_, e) => {
@@ -365,7 +365,7 @@ Step 14 — DB sync for testing (Supabase)
           )
           data.forEach((item: GalleryItem) => {
             tx.executeSql(
-              "INSERT INTO gallery (id, title) VALUES (?, ?)",
+              'INSERT INTO gallery (id, title) VALUES (?, ?)',
               [item.id, item.title],
               () => {},
               (_, e) => {
@@ -384,12 +384,13 @@ Step 14 — DB sync for testing (Supabase)
   export { syncGallery }
   ```
 
-- [ ] 14.03 CI note
-  - Use `SUPABASE_URL` and `SUPABASE_ANON_KEY` as CI secrets if needed
+- [x] 14.03 CI note
+  - Unit tests mock Supabase and SQLite; no Supabase secrets required in CI
+  - Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` only for integration/e2e using Supabase
 
 Step 15 — Basic test and coverage
 
-- [ ] 15.01 Jest configuration in `package.json`
+- [x] 15.01 Jest configuration in `package.json`
 
   ```json
   {
@@ -409,7 +410,7 @@ Step 15 — Basic test and coverage
   }
   ```
 
-- [ ] 15.02 Minimal App component example
+- [x] 15.02 Minimal App component example
 
   ```typescript
   import React from "react"
@@ -426,7 +427,7 @@ Step 15 — Basic test and coverage
   export { App }
   ```
 
-- [ ] 15.03 Unit test example
+- [x] 15.03 Unit test example
 
   ```typescript
   import React from "react"
