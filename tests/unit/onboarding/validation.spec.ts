@@ -24,4 +24,12 @@ describe('onboarding validation', () => {
     })
     expect(result.success).toBe(false)
   })
+
+  it('should accept valid couple codes', () => {
+    const valid = ['ABCDEF', 'HJKLMN', '234567', 'BCDFGH']
+    valid.forEach(code => {
+      const result = coupleCodeSchema.safeParse(code)
+      expect(result.success).toBe(true)
+    })
+  })
 })
