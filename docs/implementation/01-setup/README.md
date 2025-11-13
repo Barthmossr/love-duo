@@ -20,8 +20,8 @@ Step 01 — System prerequisites
 
 Step 02 — Android SDK and AVD setup
 
-- [ ] 02.01 Set `ANDROID_HOME` and add SDK `platform-tools` to `PATH`
-- [ ] 02.02 Verify `adb devices` shows emulator/device
+- [x] 02.01 Set `ANDROID_HOME` and add SDK `platform-tools` to `PATH`
+- [x] 02.02 Verify `adb devices` shows emulator/device
 - [ ] 02.03 Create AVD (Pixel 6, Android 14) and boot once
 
 Step 03 — Project bootstrap
@@ -221,7 +221,7 @@ Step 09 — Commitlint
   - `npx husky init`
 - [x] 09.04 Add `commit-msg` hook
   - `echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg`
-- [ ] 09.05 Validate a test message locally
+- [x] 09.05 Validate a test message locally
   - `echo "foo: test" | npx commitlint` should fail
   - `echo "feat: add onboarding flow" | npx commitlint` should pass
 - [x] 09.06 CI enforcement
@@ -229,12 +229,12 @@ Step 09 — Commitlint
 
 Step 10 — Validation
 
-- [ ] 10.01 `node -v` and `npm -v` match required versions
-- [ ] 10.02 `adb devices` lists at least one emulator/device
+- [x] 10.01 `node -v` and `npm -v` match required versions
+- [x] 10.02 `adb devices` lists at least one emulator/device
 - [x] 10.03 `npm run type-check` passes
 - [x] 10.04 `npm run lint` passes with no errors
 - [x] 10.05 `npm run format:check` passes
-- [ ] 10.06 Expo app runs in emulator without runtime errors
+- [x] 10.06 Expo app runs in emulator without runtime errors
 
 Step 11 — CI/CD workflows (separated)
 
