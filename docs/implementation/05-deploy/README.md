@@ -13,6 +13,7 @@ Step 01 — Prerequisites
 
 - [ ] 01.01 `01-setup` validate and `tests.yml` passing with 100% coverage
 - [ ] 01.02 Expo token created and stored as `EXPO_TOKEN` secret
+  - See `docs/guides/expo-token.md` for how to obtain and use the token
 
 Step 02 — Release channels
 

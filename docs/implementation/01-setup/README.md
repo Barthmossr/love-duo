@@ -22,7 +22,6 @@ Step 02 — Android SDK and AVD setup
 
 - [x] 02.01 Set `ANDROID_HOME` and add SDK `platform-tools` to `PATH`
 - [x] 02.02 Verify `adb devices` shows emulator/device
-- [ ] 02.03 Create AVD (Pixel 6, Android 14) and boot once
 
 Step 03 — Project bootstrap
 
@@ -164,7 +163,7 @@ Step 06 — Husky and lint-staged
 
 Step 07 — Environment variables
 
-- [ ] 07.01 Create `.env.example`, `.env.development`, `.env.staging`, `.env.production`
+- [x] 07.01 Create `.env.example`, `.env.development`, `.env.staging`, `.env.production`
 - [x] 07.02 Add `env.ts` with validation schema (using `zod`)
 
 ```typescript
@@ -206,7 +205,8 @@ Step 08 — NPM scripts
       "lint:fix": "eslint . --ext .ts,.tsx --fix",
       "format": "prettier --write .",
       "format:check": "prettier --check .",
-      "type-check": "tsc --noEmit"
+      "type-check": "tsc --noEmit",
+      "doctor": "npx expo-doctor"
     }
   }
   ```
@@ -238,8 +238,9 @@ Step 10 — Validation
 
 Step 11 — CI/CD workflows (separated)
 
-- [ ] 11.01 Add GitHub secrets (as needed)
-  - `EXPO_TOKEN` if publishing is handled in deploy phase
+- [x] 11.01 Add GitHub secrets (as needed)
+  - `EXPO_TOKEN` for EAS Update in deploy phase
+  - See `docs/guides/expo-token.md` for how to obtain and use the token
 
 - [x] 11.02 Create validation workflow `.github/workflows/validate.yml`
 
@@ -291,8 +292,10 @@ Step 11 — CI/CD workflows (separated)
             path: coverage
   ```
 
-- [ ] 12.04 Note on Expo publish
-  - Expo publish is documented in `05-deploy` and can be a separate workflow
+- [x] 12.04 Note on EAS Update
+  - Use EAS Update for publishing; see `05-deploy`
+  - Configure `EXPO_TOKEN` in GitHub secrets when enabling publish in CI
+  - See `docs/guides/expo-token.md` for steps to generate and use the token
 
 Step 13 — SQLite configuration
 
@@ -381,8 +384,9 @@ Step 14 — DB sync for testing (Supabase)
   export { syncGallery }
   ```
 
-- [ ] 14.03 CI note
-  - Use `SUPABASE_URL` and `SUPABASE_ANON_KEY` as CI secrets if needed
+- [x] 14.03 CI note
+  - Unit tests mock Supabase and SQLite; no Supabase secrets required in CI
+  - Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` only for integration/e2e using Supabase
 
 Step 15 — Basic test and coverage
 
