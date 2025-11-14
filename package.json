@@ -2,7 +2,6 @@
   "name": "love-duo",
   "version": "1.0.0",
   "main": "expo-router/entry",
-  "type": "module",
   "scripts": {
     "dev": "expo start",
     "build": "tsc",
@@ -29,9 +28,11 @@
     "type-check": "tsc --noEmit",
     "web:build": "expo export --platform web",
     "doctor": "npx expo-doctor",
-    "prepare": "husky"
+    "prepare": "husky",
+    "uninstall": "adb uninstall com.loveduo"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react-native": "0.7.1",
     "expo": "54.0.23",
     "expo-constants": "18.0.10",
     "expo-dev-client": "6.0.17",
@@ -71,7 +72,8 @@
   "jest": {
     "preset": "jest-expo",
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(lottie)$": "<rootDir>/tests/__mocks__/lottieMock.js"
     },
     "collectCoverage": true,
     "coverageThreshold": {

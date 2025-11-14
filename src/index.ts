@@ -1,7 +1,4 @@
-import { registerRootComponent } from 'expo'
-
-import { App } from './app/App'
+import 'expo-router/entry'
 import { getEnv } from './config'
 
 getEnv()
-registerRootComponent(App)
