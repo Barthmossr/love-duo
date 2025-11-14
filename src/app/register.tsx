@@ -1,6 +1,7 @@
-import { Redirect } from 'expo-router'
 import type { JSX } from 'react'
 
+import { Register } from '@/onboarding/screens/Register'
+
 export default function Page(): JSX.Element {
-  return <Redirect href="/start" />
+  return <Register />
 }
