@@ -10,4 +10,12 @@ describe('PairCode screen', () => {
     fireEvent.press(getByTestId('paircode-next'))
     expect(navigate).not.toHaveBeenCalled()
   })
+
+  it('should navigate when valid', () => {
+    const navigate = jest.fn()
+    const { getByTestId } = render(<PairCode navigation={{ navigate }} />)
+    fireEvent.changeText(getByTestId('paircode-input'), 'ABCDEF')
+    fireEvent.press(getByTestId('paircode-next'))
+    expect(navigate).toHaveBeenCalledWith('Confirm')
+  })
 })
