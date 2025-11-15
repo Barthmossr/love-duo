@@ -45,4 +45,12 @@ describe('Button', () => {
     expect(UNSAFE_getByType(MaterialIcons)).toBeDefined()
     expect(getByText('With Icon')).toBeDefined()
   })
+
+  it('should not call onPress when disabled', () => {
+    const onPressMock = jest.fn()
+    const { getByText } = render(<Button title="Disabled" onPress={onPressMock} disabled={true} />)
+
+    fireEvent.press(getByText('Disabled'))
+    expect(onPressMock).not.toHaveBeenCalled()
+  })
 })
