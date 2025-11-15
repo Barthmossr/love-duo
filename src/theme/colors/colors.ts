@@ -37,6 +37,9 @@ const COLORS: Colors = {
   },
   ring: {
     bg: '#ff9da5'
+  },
+  shadow: {
+    bg: '#000000'
   }
 }
 
