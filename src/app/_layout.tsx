@@ -10,7 +10,7 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-import { COLORS } from '../theme/colors'
+import { COLORS } from '@/theme/colors'
 
 const RootLayout = (): React.ReactElement => {
   const [fontsLoaded] = useFonts({

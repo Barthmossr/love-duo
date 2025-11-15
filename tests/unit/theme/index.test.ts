@@ -1,7 +1,7 @@
-import { COLORS } from '../../../src/theme/colors'
-import { FONTS } from '../../../src/theme/fonts'
-import { FONT_SIZES } from '../../../src/theme/fontSizes'
-import { SPACING } from '../../../src/theme/spacing'
+import { COLORS } from '@/theme/colors'
+import { FONTS } from '@/theme/fonts'
+import { FONT_SIZES } from '@/theme/fontSizes'
+import { SPACING } from '@/theme/spacing'
 
 describe('theme', () => {
   describe('COLORS', () => {
