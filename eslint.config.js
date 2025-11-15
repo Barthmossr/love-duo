@@ -22,6 +22,8 @@ export default [
       globals: {
         React: 'readonly',
         JSX: 'readonly',
+        console: 'readonly',
+        require: 'readonly',
         describe: 'readonly',
         it: 'readonly',
         test: 'readonly',
@@ -110,7 +112,8 @@ export default [
       'build/**',
       '*.config.js',
       '*.config.cjs',
-      'metro.config.js'
+      'metro.config.js',
+      'jest.setup.js'
     ]
   }
 ]
