@@ -24,4 +24,15 @@ describe('Button', () => {
       expect.objectContaining({ backgroundColor: '#ff9da5' })
     )
   })
+
+  it('should render secondary variant', () => {
+    const { getByText } = render(
+      <Button title="Secondary" onPress={() => {}} variant="secondary" />
+    )
+    const button = getByText('Secondary').parent
+
+    expect(button?.props.style).toContainEqual(
+      expect.objectContaining({ backgroundColor: '#c1a9ee' })
+    )
+  })
 })
