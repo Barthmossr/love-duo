@@ -53,4 +53,12 @@ describe('Button', () => {
     fireEvent.press(getByText('Disabled'))
     expect(onPressMock).not.toHaveBeenCalled()
   })
+
+  it('should have correct accessibility props', () => {
+    const { getByLabelText } = render(<Button title="Accessible" onPress={() => {}} />)
+    const button = getByLabelText('Accessible')
+
+    expect(button.props.accessible).toBe(true)
+    expect(button.props.accessibilityRole).toBe('button')
+  })
 })
