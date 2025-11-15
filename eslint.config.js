@@ -109,6 +109,7 @@ export default [
       'dist/**',
       'build/**',
       '*.config.js',
+      '*.config.cjs',
       'metro.config.js'
     ]
   }
