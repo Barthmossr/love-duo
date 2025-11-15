@@ -1,3 +1,4 @@
+import { MaterialIcons } from '@expo/vector-icons'
 import { fireEvent, render } from '@testing-library/react-native'
 
 import { Button } from '@/components/Button/Button'
@@ -34,5 +35,14 @@ describe('Button', () => {
     expect(button?.props.style).toContainEqual(
       expect.objectContaining({ backgroundColor: '#c1a9ee' })
     )
+  })
+
+  it('should render with icon', () => {
+    const { getByText, UNSAFE_getByType } = render(
+      <Button title="With Icon" onPress={() => {}} iconName="group-add" />
+    )
+
+    expect(UNSAFE_getByType(MaterialIcons)).toBeDefined()
+    expect(getByText('With Icon')).toBeDefined()
   })
 })
