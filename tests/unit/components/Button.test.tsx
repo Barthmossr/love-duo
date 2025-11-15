@@ -15,4 +15,13 @@ describe('Button', () => {
     fireEvent.press(getByText('Press Me'))
     expect(onPressMock).toHaveBeenCalledTimes(1)
   })
+
+  it('should render primary variant by default', () => {
+    const { getByText } = render(<Button title="Primary" onPress={() => {}} />)
+    const button = getByText('Primary').parent
+
+    expect(button?.props.style).toContainEqual(
+      expect.objectContaining({ backgroundColor: '#ff9da5' })
+    )
+  })
 })
