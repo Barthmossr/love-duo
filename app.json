@@ -14,7 +14,8 @@
         {
           "root": "./src/app"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
