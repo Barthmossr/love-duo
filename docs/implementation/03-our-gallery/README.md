@@ -61,9 +61,7 @@ const ensureGalleryTables = (): Promise<void> => {
         tx.executeSql(
           'CREATE TABLE IF NOT EXISTS album (id TEXT PRIMARY KEY, title TEXT, coverItemId TEXT, createdAt TEXT)'
         )
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS album_items (albumId TEXT, itemId TEXT)'
-        )
+        tx.executeSql('CREATE TABLE IF NOT EXISTS album_items (albumId TEXT, itemId TEXT)')
       },
       reject,
       resolve
@@ -92,11 +90,7 @@ Step 06 — Screens & navigation
 ```typescript
 type GalleryRoute = 'GalleryGrid' | 'AlbumCreate' | 'AlbumDetail'
 
-const GALLERY_ROUTES: GalleryRoute[] = [
-  'GalleryGrid',
-  'AlbumCreate',
-  'AlbumDetail'
-]
+const GALLERY_ROUTES: GalleryRoute[] = ['GalleryGrid', 'AlbumCreate', 'AlbumDetail']
 
 export { GALLERY_ROUTES }
 ```

@@ -88,12 +88,7 @@ Step 06 — Screens & navigation
 ```typescript
 type DatesRoute = 'SuggestionsDeck' | 'DateDetail' | 'Schedule' | 'History'
 
-const DATES_ROUTES: DatesRoute[] = [
-  'SuggestionsDeck',
-  'DateDetail',
-  'Schedule',
-  'History'
-]
+const DATES_ROUTES: DatesRoute[] = ['SuggestionsDeck', 'DateDetail', 'Schedule', 'History']
 
 export { DATES_ROUTES }
 ```
@@ -115,9 +110,7 @@ const suggestionSchema = z.object({
 
 const scheduleSchema = z.object({
   suggestionId: z.string().min(1),
-  scheduledAt: z
-    .string()
-    .refine(v => new Date(v).getTime() > Date.now(), 'Must be future')
+  scheduledAt: z.string().refine(v => new Date(v).getTime() > Date.now(), 'Must be future')
 })
 
 export { suggestionSchema, scheduleSchema }

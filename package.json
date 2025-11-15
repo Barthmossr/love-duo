@@ -2,6 +2,7 @@
   "name": "love-duo",
   "version": "1.0.0",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -31,7 +32,16 @@
     "react-native": "0.81.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/react": "~19.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-native": "^5.0.0",
+    "prettier": "^3.6.2",
     "typescript": "~5.9.2"
   },
   "private": true
