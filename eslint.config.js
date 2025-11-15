@@ -21,7 +21,16 @@ export default [
       },
       globals: {
         React: 'readonly',
-        JSX: 'readonly'
+        JSX: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly'
       }
     },
     plugins: {

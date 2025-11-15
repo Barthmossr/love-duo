@@ -23,7 +23,8 @@
     "prebuild": "expo prebuild",
     "build:dev": "eas build --profile development",
     "build:preview": "eas build --profile preview",
-    "build:prod": "eas build --profile production"
+    "build:prod": "eas build --profile production",
+    "prepare": "husky"
   },
   "dependencies": {
     "expo": "~54.0.23",
@@ -33,6 +34,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
@@ -41,8 +45,21 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-native": "^5.0.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
+    "ts-jest": "^29.4.5",
     "typescript": "~5.9.2"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "eslint --max-warnings=0 --fix",
+      "prettier --write"
+    ],
+    "**/*.{js,jsx,json,md}": [
+      "prettier --write"
+    ]
   },
   "private": true
 }
