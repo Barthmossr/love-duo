@@ -4,6 +4,8 @@ import typescriptParser from '@typescript-eslint/parser'
 import importPlugin from 'eslint-plugin-import'
 import reactPlugin from 'eslint-plugin-react'
 import reactNativePlugin from 'eslint-plugin-react-native'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import unusedImports from 'eslint-plugin-unused-imports'
 
 export default [
   js.configs.recommended,
@@ -39,9 +41,14 @@ export default [
       '@typescript-eslint': typescriptPlugin,
       import: importPlugin,
       react: reactPlugin,
-      'react-native': reactNativePlugin
+      'react-native': reactNativePlugin,
+      'simple-import-sort': simpleImportSort,
+      'unused-imports': unusedImports
     },
     rules: {
+      'unused-imports/no-unused-imports': 'error',
+      'simple-import-sort/imports': 'off',
+      'simple-import-sort/exports': 'off',
       'import/order': [
         'error',
         {
