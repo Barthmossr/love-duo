@@ -12,4 +12,9 @@ describe('Welcome', () => {
     const { getByText } = render(<Welcome />)
     expect(getByText('Um espaço especial para o casal')).toBeDefined()
   })
+
+  it('should render create couple button', () => {
+    const { getByText } = render(<Welcome />)
+    expect(getByText('Criar Novo Casal')).toBeDefined()
+  })
 })
