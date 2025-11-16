@@ -17,4 +17,9 @@ describe('Welcome', () => {
     const { getByText } = render(<Welcome />)
     expect(getByText('Criar Novo Casal')).toBeDefined()
   })
+
+  it('should render enter code button', () => {
+    const { getByText } = render(<Welcome />)
+    expect(getByText('Entrar com Código')).toBeDefined()
+  })
 })
