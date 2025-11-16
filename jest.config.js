@@ -7,6 +7,8 @@ export default {
     'src/**/*.{ts,tsx}',
     '!src/**/*.types.ts',
     '!src/**/*.styles.ts',
+    '!src/**/index.ts',
+    '!src/app/**',
     '!**/node_modules/**',
     '!**/vendor/**'
   ],

@@ -28,14 +28,14 @@ const Button = ({
     disabled && styles.disabledText
   ]
 
-  const iconColor =
-    variant === 'primary'
-      ? styles.primaryText.color
-      : variant === 'secondary'
-        ? styles.secondaryText.color
-        : variant === 'light'
-          ? styles.lightText.color
-          : styles.disabledText.color
+  const getIconColor = (): string => {
+    if (disabled) return styles.disabledText.color
+    if (variant === 'primary') return styles.primaryText.color
+    if (variant === 'secondary') return styles.secondaryText.color
+    return styles.lightText.color
+  }
+
+  const iconColor = getIconColor()
 
   return (
     <Pressable

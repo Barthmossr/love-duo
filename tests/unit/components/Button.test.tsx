@@ -55,4 +55,17 @@ describe('Button', () => {
     expect(button.props.accessible).toBe(true)
     expect(button.props.accessibilityRole).toBe('button')
   })
+
+  it('should render light variant', () => {
+    const { getByText } = render(<Button title="Light" onPress={() => {}} variant="light" />)
+    expect(getByText('Light')).toBeDefined()
+  })
+
+  it('should render disabled button with icon', () => {
+    const { getByText, getByTestId } = render(
+      <Button title="Disabled Icon" onPress={() => {}} iconName="close" disabled={true} />
+    )
+    expect(getByText('Disabled Icon')).toBeDefined()
+    expect(getByTestId('icon-close')).toBeDefined()
+  })
 })

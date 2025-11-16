@@ -1,8 +1,17 @@
-import { render } from '@testing-library/react-native'
+import { fireEvent, render, waitFor } from '@testing-library/react-native'
+import { Asset } from 'expo-asset'
+import { ActivityIndicator } from 'react-native'
 
 import { Welcome } from '@/components/Welcome/Welcome'
 
+jest.mock('expo-asset')
+
 describe('Welcome', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    console.error = jest.fn()
+    console.warn = jest.fn()
+  })
   it('should render title correctly', () => {
     const { getByText } = render(<Welcome />)
     expect(getByText('Nossa História')).toBeDefined()
@@ -26,5 +35,54 @@ describe('Welcome', () => {
   it('should render create couple button with icon', () => {
     const { getByTestId } = render(<Welcome />)
     expect(getByTestId('icon-group-add')).toBeDefined()
+  })
+
+  it('should show loading indicator when animation is not loaded', () => {
+    const { UNSAFE_getByType } = render(<Welcome />)
+    expect(UNSAFE_getByType(ActivityIndicator)).toBeDefined()
+  })
+
+  it('should load animation successfully', async () => {
+    const mockAsset = {
+      downloadAsync: jest.fn().mockResolvedValue(undefined),
+      localUri: 'mock://animation.lottie'
+    }
+    ;(Asset.fromModule as jest.Mock).mockReturnValue(mockAsset)
+
+    render(<Welcome />)
+
+    await waitFor(() => {
+      expect(mockAsset.downloadAsync).toHaveBeenCalled()
+    })
+  })
+
+  it('should handle animation load error', async () => {
+    const mockError = new Error('Failed to load')
+    const mockAsset = {
+      downloadAsync: jest.fn().mockRejectedValue(mockError)
+    }
+    ;(Asset.fromModule as jest.Mock).mockReturnValue(mockAsset)
+
+    render(<Welcome />)
+
+    await waitFor(() => {
+      expect(console.error).toHaveBeenCalledWith('Failed to load animation:', mockError)
+    })
+  })
+
+  it('should handle create couple button press', () => {
+    const { getByText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    expect(console.warn).toHaveBeenCalledWith('Create couple navigation pending')
+  })
+
+  it('should handle enter code button press', () => {
+    const { getByText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    expect(console.warn).toHaveBeenCalledWith('Enter code navigation pending')
   })
 })
