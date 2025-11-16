@@ -22,4 +22,9 @@ describe('Welcome', () => {
     const { getByText } = render(<Welcome />)
     expect(getByText('Entrar com Código')).toBeDefined()
   })
+
+  it('should render create couple button with icon', () => {
+    const { getByTestId } = render(<Welcome />)
+    expect(getByTestId('icon-group-add')).toBeDefined()
+  })
 })
