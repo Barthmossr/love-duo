@@ -51,10 +51,25 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 4
+    elevation: 4,
+    gap: SPACING.md
+  },
+  cardTitle: {
+    fontFamily: FONTS.semiBold,
+    fontSize: FONT_SIZES.lg,
+    color: COLORS.card.text,
+    marginBottom: SPACING.sm
   },
   buttonContainer: {
     gap: SPACING.md
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    width: '100%'
+  },
+  buttonHalf: {
+    flex: 1
   }
 })
 

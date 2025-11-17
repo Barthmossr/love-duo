@@ -7,11 +7,14 @@ import { View, Text, ActivityIndicator } from 'react-native'
 import { styles } from './Welcome.styles'
 
 import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
 import { COLORS } from '@/theme/colors'
 
 const Welcome = (): React.ReactElement => {
   const animationRef = useRef<LottieView>(null)
   const [animationSource, setAnimationSource] = useState<string | null>(null)
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [coupleName, setCoupleName] = useState('')
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -30,11 +33,20 @@ const Welcome = (): React.ReactElement => {
   }, [])
 
   const handleCreateCouple = (): void => {
-    console.warn('Create couple navigation pending')
+    setShowCreateForm(true)
   }
 
   const handleEnterCode = (): void => {
     console.warn('Enter code navigation pending')
+  }
+
+  const handleBack = (): void => {
+    setShowCreateForm(false)
+    setCoupleName('')
+  }
+
+  const handleCreateCode = (): void => {
+    console.warn('Creating code for couple:', coupleName)
   }
 
   return (
@@ -58,18 +70,41 @@ const Welcome = (): React.ReactElement => {
             <ActivityIndicator size="large" color={COLORS.primary.bg} />
           )}
         </View>
-        <Text style={styles.title}>Nossa História</Text>
-        <Text style={styles.subtitle}>Um espaço especial para o casal</Text>
+        {!showCreateForm && (
+          <>
+            <Text style={styles.title}>Nossa História</Text>
+            <Text style={styles.subtitle}>Um espaço especial para o casal</Text>
+          </>
+        )}
         <View style={styles.card}>
-          <View style={styles.buttonContainer}>
-            <Button
-              title="Criar Novo Casal"
-              onPress={handleCreateCouple}
-              variant="primary"
-              iconName="group-add"
-            />
-            <Button title="Entrar com Código" onPress={handleEnterCode} variant="light" />
-          </View>
+          {showCreateForm ? (
+            <>
+              <Text style={styles.cardTitle}>Nome do Casal</Text>
+              <Input
+                value={coupleName}
+                onChangeText={setCoupleName}
+                placeholder="Ex: João & Maria"
+              />
+              <View style={styles.buttonRow}>
+                <View style={styles.buttonHalf}>
+                  <Button title="Voltar" onPress={handleBack} variant="light" />
+                </View>
+                <View style={styles.buttonHalf}>
+                  <Button title="Criar Código" onPress={handleCreateCode} variant="primary" />
+                </View>
+              </View>
+            </>
+          ) : (
+            <View style={styles.buttonContainer}>
+              <Button
+                title="Criar Novo Casal"
+                onPress={handleCreateCouple}
+                variant="primary"
+                iconName="group-add"
+              />
+              <Button title="Entrar com Código" onPress={handleEnterCode} variant="light" />
+            </View>
+          )}
         </View>
       </View>
     </LinearGradient>
