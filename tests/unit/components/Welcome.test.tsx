@@ -70,12 +70,38 @@ describe('Welcome', () => {
     })
   })
 
-  it('should handle create couple button press', () => {
+  it('should handle create couple button press and show form', () => {
     const { getByText } = render(<Welcome />)
 
     fireEvent.press(getByText('Criar Novo Casal'))
 
-    expect(console.warn).toHaveBeenCalledWith('Create couple navigation pending')
+    expect(getByText('Nome do Casal')).toBeDefined()
+    expect(getByText('Voltar')).toBeDefined()
+    expect(getByText('Criar Código')).toBeDefined()
+  })
+
+  it('should handle back button press', () => {
+    const { getByText, queryByText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+    expect(getByText('Nome do Casal')).toBeDefined()
+
+    fireEvent.press(getByText('Voltar'))
+    expect(queryByText('Nome do Casal')).toBeNull()
+    expect(getByText('Criar Novo Casal')).toBeDefined()
+  })
+
+  it('should handle create code button press', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const input = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(input, 'Test Couple')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    expect(console.warn).toHaveBeenCalledWith('Creating code for couple:', 'Test Couple')
   })
 
   it('should handle enter code button press', () => {
