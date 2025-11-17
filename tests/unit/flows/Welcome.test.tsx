@@ -147,4 +147,14 @@ describe('Welcome', () => {
 
     expect(console.warn).toHaveBeenCalledWith('Entering with code:', 'ABC123', 'as:', 'Maria')
   })
+
+  it('should generate code without couple name and show empty string fallback', () => {
+    const { getByText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+    fireEvent.press(getByText('Criar Código'))
+
+    expect(getByText('Seu código do casal é:')).toBeDefined()
+    expect(getByText('Continuar como ')).toBeDefined()
+  })
 })
