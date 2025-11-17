@@ -111,6 +111,8 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Entrar com Código'))
 
-    expect(console.warn).toHaveBeenCalledWith('Enter code navigation pending')
+    expect(getByText('Código do Casal')).toBeDefined()
+    expect(getByText('Seu Nome')).toBeDefined()
+    expect(getByText('Entrar')).toBeDefined()
   })
 })

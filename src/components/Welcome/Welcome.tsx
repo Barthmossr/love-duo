@@ -14,7 +14,9 @@ const Welcome = (): React.ReactElement => {
   const animationRef = useRef<LottieView>(null)
   const [animationSource, setAnimationSource] = useState<string | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showEnterForm, setShowEnterForm] = useState(false)
   const [coupleName, setCoupleName] = useState('')
+  const [coupleCode, setCoupleCode] = useState('')
   const [userName, setUserName] = useState('')
   const [generatedCode, setGeneratedCode] = useState<string | null>(null)
 
@@ -39,12 +41,14 @@ const Welcome = (): React.ReactElement => {
   }
 
   const handleEnterCode = (): void => {
-    console.warn('Enter code navigation pending')
+    setShowEnterForm(true)
   }
 
   const handleBack = (): void => {
     setShowCreateForm(false)
+    setShowEnterForm(false)
     setCoupleName('')
+    setCoupleCode('')
     setUserName('')
     setGeneratedCode(null)
   }
@@ -56,6 +60,10 @@ const Welcome = (): React.ReactElement => {
 
   const handleContinue = (): void => {
     console.warn('Continue as:', userName)
+  }
+
+  const handleEnter = (): void => {
+    console.warn('Entering with code:', coupleCode, 'as:', userName)
   }
 
   return (
@@ -79,7 +87,7 @@ const Welcome = (): React.ReactElement => {
             <ActivityIndicator size="large" color={COLORS.primary.bg} />
           )}
         </View>
-        {!showCreateForm && !generatedCode && (
+        {!showCreateForm && !showEnterForm && !generatedCode && (
           <>
             <Text style={styles.title}>Nossa História</Text>
             <Text style={styles.subtitle}>Um espaço especial para o casal</Text>
@@ -98,6 +106,21 @@ const Welcome = (): React.ReactElement => {
                 onPress={handleContinue}
                 variant="primary"
               />
+            </>
+          ) : showEnterForm ? (
+            <>
+              <Text style={styles.cardTitle}>Código do Casal</Text>
+              <Input value={coupleCode} onChangeText={setCoupleCode} placeholder="Ex: RFBZ7H" />
+              <Text style={styles.cardTitle}>Seu Nome</Text>
+              <Input value={userName} onChangeText={setUserName} placeholder="Ex: Maria" />
+              <View style={styles.buttonRow}>
+                <View style={styles.buttonHalf}>
+                  <Button title="Voltar" onPress={handleBack} variant="light" />
+                </View>
+                <View style={styles.buttonHalf}>
+                  <Button title="Entrar" onPress={handleEnter} variant="primary" />
+                </View>
+              </View>
             </>
           ) : showCreateForm ? (
             <>
