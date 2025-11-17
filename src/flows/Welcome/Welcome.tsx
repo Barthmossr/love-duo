@@ -4,17 +4,20 @@ import LottieView from 'lottie-react-native'
 import React, { useRef, useEffect, useState } from 'react'
 import { View, Text, ActivityIndicator } from 'react-native'
 
+import { CodeDisplay } from './components/CodeDisplay'
+import { CreateCoupleForm } from './components/CreateCoupleForm'
+import { EnterCodeForm } from './components/EnterCodeForm'
+import { WelcomeHome } from './components/WelcomeHome'
 import { styles } from './Welcome.styles'
 
-import { Button } from '@/components/Button'
-import { Input } from '@/components/Input'
 import { COLORS } from '@/theme/colors'
+
+type WelcomeStep = 'home' | 'createForm' | 'enterForm' | 'codeDisplay'
 
 const Welcome = (): React.ReactElement => {
   const animationRef = useRef<LottieView>(null)
   const [animationSource, setAnimationSource] = useState<string | null>(null)
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [showEnterForm, setShowEnterForm] = useState(false)
+  const [currentStep, setCurrentStep] = useState<WelcomeStep>('home')
   const [coupleName, setCoupleName] = useState('')
   const [coupleCode, setCoupleCode] = useState('')
   const [userName, setUserName] = useState('')
@@ -37,16 +40,15 @@ const Welcome = (): React.ReactElement => {
   }, [])
 
   const handleCreateCouple = (): void => {
-    setShowCreateForm(true)
+    setCurrentStep('createForm')
   }
 
   const handleEnterCode = (): void => {
-    setShowEnterForm(true)
+    setCurrentStep('enterForm')
   }
 
   const handleBack = (): void => {
-    setShowCreateForm(false)
-    setShowEnterForm(false)
+    setCurrentStep('home')
     setCoupleName('')
     setCoupleCode('')
     setUserName('')
@@ -56,6 +58,7 @@ const Welcome = (): React.ReactElement => {
   const handleCreateCode = (): void => {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase()
     setGeneratedCode(code)
+    setCurrentStep('codeDisplay')
   }
 
   const handleContinue = (): void => {
@@ -64,6 +67,40 @@ const Welcome = (): React.ReactElement => {
 
   const handleEnter = (): void => {
     console.warn('Entering with code:', coupleCode, 'as:', userName)
+  }
+
+  const renderStep = (): React.ReactElement => {
+    switch (currentStep) {
+      case 'codeDisplay':
+        return (
+          <CodeDisplay code={generatedCode || ''} userName={userName} onContinue={handleContinue} />
+        )
+      case 'enterForm':
+        return (
+          <EnterCodeForm
+            coupleCode={coupleCode}
+            userName={userName}
+            onCoupleCodeChange={setCoupleCode}
+            onUserNameChange={setUserName}
+            onBack={handleBack}
+            onEnter={handleEnter}
+          />
+        )
+      case 'createForm':
+        return (
+          <CreateCoupleForm
+            coupleName={coupleName}
+            userName={userName}
+            onCoupleNameChange={setCoupleName}
+            onUserNameChange={setUserName}
+            onBack={handleBack}
+            onCreateCode={handleCreateCode}
+          />
+        )
+      case 'home':
+      default:
+        return <WelcomeHome onCreateCouple={handleCreateCouple} onEnterCode={handleEnterCode} />
+    }
   }
 
   return (
@@ -87,72 +124,13 @@ const Welcome = (): React.ReactElement => {
             <ActivityIndicator size="large" color={COLORS.primary.bg} />
           )}
         </View>
-        {!showCreateForm && !showEnterForm && !generatedCode && (
+        {currentStep === 'home' && (
           <>
             <Text style={styles.title}>Nossa História</Text>
             <Text style={styles.subtitle}>Um espaço especial para o casal</Text>
           </>
         )}
-        <View style={styles.card}>
-          {generatedCode ? (
-            <>
-              <Text style={styles.codeLabel}>Seu código do casal é:</Text>
-              <View style={styles.codeContainer}>
-                <Text style={styles.codeText}>{generatedCode}</Text>
-              </View>
-              <Text style={styles.shareText}>Compartilhe este código com seu parceiro(a)</Text>
-              <Button
-                title={`Continuar como ${userName}`}
-                onPress={handleContinue}
-                variant="primary"
-              />
-            </>
-          ) : showEnterForm ? (
-            <>
-              <Text style={styles.cardTitle}>Código do Casal</Text>
-              <Input value={coupleCode} onChangeText={setCoupleCode} placeholder="Ex: RFBZ7H" />
-              <Text style={styles.cardTitle}>Seu Nome</Text>
-              <Input value={userName} onChangeText={setUserName} placeholder="Ex: Maria" />
-              <View style={styles.buttonRow}>
-                <View style={styles.buttonHalf}>
-                  <Button title="Voltar" onPress={handleBack} variant="light" />
-                </View>
-                <View style={styles.buttonHalf}>
-                  <Button title="Entrar" onPress={handleEnter} variant="primary" />
-                </View>
-              </View>
-            </>
-          ) : showCreateForm ? (
-            <>
-              <Text style={styles.cardTitle}>Nome do Casal</Text>
-              <Input
-                value={coupleName}
-                onChangeText={setCoupleName}
-                placeholder="Ex: João & Maria"
-              />
-              <Text style={styles.cardTitle}>Seu Nome</Text>
-              <Input value={userName} onChangeText={setUserName} placeholder="Ex: João" />
-              <View style={styles.buttonRow}>
-                <View style={styles.buttonHalf}>
-                  <Button title="Voltar" onPress={handleBack} variant="light" />
-                </View>
-                <View style={styles.buttonHalf}>
-                  <Button title="Criar Código" onPress={handleCreateCode} variant="primary" />
-                </View>
-              </View>
-            </>
-          ) : (
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Criar Novo Casal"
-                onPress={handleCreateCouple}
-                variant="primary"
-                iconName="group-add"
-              />
-              <Button title="Entrar com Código" onPress={handleEnterCode} variant="light" />
-            </View>
-          )}
-        </View>
+        <View style={styles.card}>{renderStep()}</View>
       </View>
     </LinearGradient>
   )
