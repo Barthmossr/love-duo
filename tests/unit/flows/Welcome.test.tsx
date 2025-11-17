@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native'
 import { Asset } from 'expo-asset'
 import { ActivityIndicator } from 'react-native'
 
-import { Welcome } from '@/components/Welcome/Welcome'
+import { Welcome } from '@/flows/Welcome/Welcome'
 
 jest.mock('expo-asset')
 

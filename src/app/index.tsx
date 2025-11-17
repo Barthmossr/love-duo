@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Welcome } from '@/components/Welcome'
+import { Welcome } from '@/flows/Welcome'
 
 const Index = (): React.ReactElement => {
   return <Welcome />
