@@ -15,8 +15,8 @@ const Welcome = (): React.ReactElement => {
   const [animationSource, setAnimationSource] = useState<string | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [coupleName, setCoupleName] = useState('')
+  const [userName, setUserName] = useState('')
   const [generatedCode, setGeneratedCode] = useState<string | null>(null)
-  const [userName] = useState('Usuário 1')
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -45,6 +45,7 @@ const Welcome = (): React.ReactElement => {
   const handleBack = (): void => {
     setShowCreateForm(false)
     setCoupleName('')
+    setUserName('')
     setGeneratedCode(null)
   }
 
@@ -106,6 +107,8 @@ const Welcome = (): React.ReactElement => {
                 onChangeText={setCoupleName}
                 placeholder="Ex: João & Maria"
               />
+              <Text style={styles.cardTitle}>Seu Nome</Text>
+              <Input value={userName} onChangeText={setUserName} placeholder="Ex: João" />
               <View style={styles.buttonRow}>
                 <View style={styles.buttonHalf}>
                   <Button title="Voltar" onPress={handleBack} variant="light" />
