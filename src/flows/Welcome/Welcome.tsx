@@ -21,7 +21,7 @@ const Welcome = (): React.ReactElement => {
   const [coupleName, setCoupleName] = useState('')
   const [coupleCode, setCoupleCode] = useState('')
   const [userName, setUserName] = useState('')
-  const [generatedCode, setGeneratedCode] = useState<string | null>(null)
+  const [generatedCode, setGeneratedCode] = useState('')
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -52,7 +52,7 @@ const Welcome = (): React.ReactElement => {
     setCoupleName('')
     setCoupleCode('')
     setUserName('')
-    setGeneratedCode(null)
+    setGeneratedCode('')
   }
 
   const handleCreateCode = (): void => {
@@ -72,9 +72,7 @@ const Welcome = (): React.ReactElement => {
   const renderStep = (): React.ReactElement => {
     switch (currentStep) {
       case 'codeDisplay':
-        return (
-          <CodeDisplay code={generatedCode || ''} userName={userName} onContinue={handleContinue} />
-        )
+        return <CodeDisplay code={generatedCode} userName={userName} onContinue={handleContinue} />
       case 'enterForm':
         return (
           <EnterCodeForm
@@ -98,7 +96,6 @@ const Welcome = (): React.ReactElement => {
           />
         )
       case 'home':
-      default:
         return <WelcomeHome onCreateCouple={handleCreateCouple} onEnterCode={handleEnterCode} />
     }
   }
