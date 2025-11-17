@@ -92,7 +92,7 @@ describe('Welcome', () => {
   })
 
   it('should handle create code button press', () => {
-    const { getByText, getByPlaceholderText } = render(<Welcome />)
+    const { getByText, getByPlaceholderText, queryByText } = render(<Welcome />)
 
     fireEvent.press(getByText('Criar Novo Casal'))
 
@@ -101,7 +101,9 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Criar Código'))
 
-    expect(console.warn).toHaveBeenCalledWith('Creating code for couple:', 'Test Couple')
+    expect(getByText('Seu código do casal é:')).toBeDefined()
+    expect(getByText('Compartilhe este código com seu parceiro(a)')).toBeDefined()
+    expect(queryByText(/Continuar como Usuário 1/)).toBeDefined()
   })
 
   it('should handle enter code button press', () => {
