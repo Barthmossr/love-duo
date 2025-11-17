@@ -115,4 +115,36 @@ describe('Welcome', () => {
     expect(getByText('Seu Nome')).toBeDefined()
     expect(getByText('Entrar')).toBeDefined()
   })
+
+  it('should handle continue button press after code generation', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const nameInput = getByPlaceholderText('Ex: João')
+    fireEvent.changeText(nameInput, 'João')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    const continueButton = getByText('Continuar como João')
+    fireEvent.press(continueButton)
+
+    expect(console.warn).toHaveBeenCalledWith('Continue as:', 'João')
+  })
+
+  it('should handle enter button press in enter code form', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC123')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    expect(console.warn).toHaveBeenCalledWith('Entering with code:', 'ABC123', 'as:', 'Maria')
+  })
 })
