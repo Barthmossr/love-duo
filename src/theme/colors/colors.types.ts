@@ -19,6 +19,7 @@ interface Colors {
   border: ColorSingle
   ring: ColorSingle
   shadow: ColorSingle
+  code: ColorSingle
 }
 
 export type { Colors, ColorPair, ColorSingle }

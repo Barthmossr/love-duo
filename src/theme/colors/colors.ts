@@ -40,6 +40,9 @@ const COLORS: Colors = {
   },
   shadow: {
     bg: '#000000'
+  },
+  code: {
+    bg: '#ffedeb'
   }
 }
 

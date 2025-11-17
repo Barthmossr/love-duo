@@ -15,6 +15,8 @@ const Welcome = (): React.ReactElement => {
   const [animationSource, setAnimationSource] = useState<string | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [coupleName, setCoupleName] = useState('')
+  const [generatedCode, setGeneratedCode] = useState<string | null>(null)
+  const [userName] = useState('Usuário 1')
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -43,10 +45,16 @@ const Welcome = (): React.ReactElement => {
   const handleBack = (): void => {
     setShowCreateForm(false)
     setCoupleName('')
+    setGeneratedCode(null)
   }
 
   const handleCreateCode = (): void => {
-    console.warn('Creating code for couple:', coupleName)
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
+    setGeneratedCode(code)
+  }
+
+  const handleContinue = (): void => {
+    console.warn('Continue as:', userName)
   }
 
   return (
@@ -70,14 +78,27 @@ const Welcome = (): React.ReactElement => {
             <ActivityIndicator size="large" color={COLORS.primary.bg} />
           )}
         </View>
-        {!showCreateForm && (
+        {!showCreateForm && !generatedCode && (
           <>
             <Text style={styles.title}>Nossa História</Text>
             <Text style={styles.subtitle}>Um espaço especial para o casal</Text>
           </>
         )}
         <View style={styles.card}>
-          {showCreateForm ? (
+          {generatedCode ? (
+            <>
+              <Text style={styles.codeLabel}>Seu código do casal é:</Text>
+              <View style={styles.codeContainer}>
+                <Text style={styles.codeText}>{generatedCode}</Text>
+              </View>
+              <Text style={styles.shareText}>Compartilhe este código com seu parceiro(a)</Text>
+              <Button
+                title={`Continuar como ${userName}`}
+                onPress={handleContinue}
+                variant="primary"
+              />
+            </>
+          ) : showCreateForm ? (
             <>
               <Text style={styles.cardTitle}>Nome do Casal</Text>
               <Input
