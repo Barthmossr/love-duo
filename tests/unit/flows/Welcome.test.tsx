@@ -3,14 +3,43 @@ import { Asset } from 'expo-asset'
 import { ActivityIndicator } from 'react-native'
 
 import { Welcome } from '@/flows/Welcome/Welcome'
+import * as coupleService from '@/services/couple.service'
 
 jest.mock('expo-asset')
+jest.mock('@/services/couple.service')
 
 describe('Welcome', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     console.error = jest.fn()
     console.warn = jest.fn()
+    ;(coupleService.createCouple as jest.Mock).mockResolvedValue({
+      id: '123',
+      coupleName: 'Test Couple',
+      user1: 'João',
+      user2: null,
+      validated: false,
+      code: 'ABC123',
+      createdAt: new Date().toISOString()
+    })
+    ;(coupleService.validateCode as jest.Mock).mockResolvedValue({
+      id: '123',
+      coupleName: 'Test Couple',
+      user1: 'João',
+      user2: null,
+      validated: false,
+      code: 'ABC123',
+      createdAt: new Date().toISOString()
+    })
+    ;(coupleService.updateCoupleUser2 as jest.Mock).mockResolvedValue({
+      id: '123',
+      coupleName: 'Test Couple',
+      user1: 'João',
+      user2: 'Maria',
+      validated: true,
+      code: 'ABC123',
+      createdAt: new Date().toISOString()
+    })
   })
   it('should render title correctly', () => {
     const { getByText } = render(<Welcome />)
@@ -91,7 +120,7 @@ describe('Welcome', () => {
     expect(getByText('Criar Novo Casal')).toBeDefined()
   })
 
-  it('should handle create code button press', () => {
+  it('should handle create code button press', async () => {
     const { getByText, getByPlaceholderText, queryByText } = render(<Welcome />)
 
     fireEvent.press(getByText('Criar Novo Casal'))
@@ -104,9 +133,17 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Criar Código'))
 
-    expect(getByText('Seu código do casal é:')).toBeDefined()
-    expect(getByText('Compartilhe este código com seu parceiro(a)')).toBeDefined()
-    expect(queryByText(/Continuar como João/)).toBeDefined()
+    await waitFor(() => {
+      expect(getByText('Seu código do casal é:')).toBeDefined()
+      expect(getByText('Compartilhe este código com seu parceiro(a)')).toBeDefined()
+      expect(queryByText(/Continuar como João/)).toBeDefined()
+    })
+
+    expect(coupleService.createCouple).toHaveBeenCalledWith(
+      'Test Couple',
+      'João',
+      expect.any(String)
+    )
   })
 
   it('should handle enter code button press', () => {
@@ -119,7 +156,7 @@ describe('Welcome', () => {
     expect(getByText('Entrar')).toBeDefined()
   })
 
-  it('should handle continue button press after code generation', () => {
+  it('should handle continue button press after code generation', async () => {
     const { getByText, getByPlaceholderText } = render(<Welcome />)
 
     fireEvent.press(getByText('Criar Novo Casal'))
@@ -132,13 +169,17 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Criar Código'))
 
+    await waitFor(() => {
+      expect(getByText('Continuar como João')).toBeDefined()
+    })
+
     const continueButton = getByText('Continuar como João')
     fireEvent.press(continueButton)
 
     expect(console.warn).toHaveBeenCalledWith('Continue as:', 'João')
   })
 
-  it('should handle enter button press in enter code form', () => {
+  it('should handle enter button press in enter code form', async () => {
     const { getByText, getByPlaceholderText } = render(<Welcome />)
 
     fireEvent.press(getByText('Entrar com Código'))
@@ -151,7 +192,12 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Entrar'))
 
-    expect(console.warn).toHaveBeenCalledWith('Entering with code:', 'ABC123', 'as:', 'Maria')
+    await waitFor(() => {
+      expect(console.warn).toHaveBeenCalledWith('Entering with code:', 'ABC123', 'as:', 'Maria')
+    })
+
+    expect(coupleService.validateCode).toHaveBeenCalledWith('ABC123')
+    expect(coupleService.updateCoupleUser2).toHaveBeenCalledWith('123', 'Maria')
   })
 
   it('should show validation errors when fields are empty', () => {
@@ -220,5 +266,211 @@ describe('Welcome', () => {
     fireEvent.press(getByText('Entrar'))
 
     expect(console.warn).not.toHaveBeenCalledWith(expect.stringContaining('Entering with code'))
+  })
+
+  it('should show error when code is invalid', async () => {
+    ;(coupleService.validateCode as jest.Mock).mockResolvedValue(null)
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC123')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    await waitFor(() => {
+      expect(getByText('Código inválido')).toBeDefined()
+    })
+  })
+
+  it('should show error when code is already validated', async () => {
+    ;(coupleService.validateCode as jest.Mock).mockResolvedValue({
+      id: '123',
+      coupleName: 'Test Couple',
+      user1: 'João',
+      user2: 'Maria',
+      validated: true,
+      code: 'ABC123',
+      createdAt: new Date().toISOString()
+    })
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC123')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    await waitFor(() => {
+      expect(getByText('Este código já foi usado')).toBeDefined()
+    })
+  })
+
+  it('should handle create couple service error', async () => {
+    ;(coupleService.createCouple as jest.Mock).mockRejectedValue(new Error('Erro ao criar casal'))
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(coupleNameInput, 'Test Couple')
+
+    const userNameInput = getByPlaceholderText('Ex: João')
+    fireEvent.changeText(userNameInput, 'João')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    await waitFor(() => {
+      expect(getByText('Erro ao criar casal')).toBeDefined()
+    })
+
+    expect(coupleService.createCouple).toHaveBeenCalled()
+  })
+
+  it('should handle create couple service non-error exception', async () => {
+    ;(coupleService.createCouple as jest.Mock).mockRejectedValue('Unknown error')
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(coupleNameInput, 'Test Couple')
+
+    const userNameInput = getByPlaceholderText('Ex: João')
+    fireEvent.changeText(userNameInput, 'João')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    await waitFor(() => {
+      expect(getByText('Erro ao criar casal')).toBeDefined()
+    })
+  })
+
+  it('should handle validate code service error', async () => {
+    ;(coupleService.validateCode as jest.Mock).mockRejectedValue(
+      new Error('Erro ao validar código')
+    )
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC123')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    await waitFor(() => {
+      expect(getByText('Erro ao validar código')).toBeDefined()
+    })
+  })
+
+  it('should handle validate code service non-error exception', async () => {
+    ;(coupleService.validateCode as jest.Mock).mockRejectedValue('Unknown error')
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC123')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    await waitFor(() => {
+      expect(getByText('Erro ao validar código')).toBeDefined()
+    })
+  })
+
+  it('should disable form inputs and buttons while creating couple', async () => {
+    let resolveCreate: ((value: unknown) => void) | undefined
+    const createPromise = new Promise(resolve => {
+      resolveCreate = resolve
+    })
+    ;(coupleService.createCouple as jest.Mock).mockReturnValue(createPromise)
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    const userNameInput = getByPlaceholderText('Ex: João')
+
+    fireEvent.changeText(coupleNameInput, 'Test Couple')
+    fireEvent.changeText(userNameInput, 'João')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    await waitFor(() => {
+      expect(coupleNameInput.props.editable).toBe(false)
+      expect(userNameInput.props.editable).toBe(false)
+    })
+
+    if (resolveCreate) {
+      resolveCreate({
+        id: '123',
+        coupleName: 'Test Couple',
+        user1: 'João',
+        user2: null,
+        validated: false,
+        code: 'ABC123',
+        createdAt: new Date().toISOString()
+      })
+    }
+  })
+
+  it('should disable form inputs and buttons while validating code', async () => {
+    let resolveValidate: ((value: unknown) => void) | undefined
+    const validatePromise = new Promise(resolve => {
+      resolveValidate = resolve
+    })
+    ;(coupleService.validateCode as jest.Mock).mockReturnValue(validatePromise)
+
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    const nameInput = getByPlaceholderText('Ex: Maria')
+
+    fireEvent.changeText(codeInput, 'ABC123')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    await waitFor(() => {
+      expect(codeInput.props.editable).toBe(false)
+      expect(nameInput.props.editable).toBe(false)
+    })
+
+    if (resolveValidate) {
+      resolveValidate({
+        id: '123',
+        coupleName: 'Test Couple',
+        user1: 'João',
+        user2: null,
+        validated: false,
+        code: 'ABC123',
+        createdAt: new Date().toISOString()
+      })
+    }
   })
 })
