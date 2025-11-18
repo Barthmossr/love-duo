@@ -7,6 +7,7 @@ interface CreateCoupleFormProps {
   onCreateCode: () => void
   coupleNameError?: string
   userNameError?: string
+  isLoading?: boolean
 }
 
 export type { CreateCoupleFormProps }

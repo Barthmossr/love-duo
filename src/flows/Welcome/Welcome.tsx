@@ -10,6 +10,7 @@ import { EnterCodeForm } from './components/EnterCodeForm'
 import { WelcomeHome } from './components/WelcomeHome'
 import { styles } from './Welcome.styles'
 
+import { createCouple, validateCode, updateCoupleUser2 } from '@/services/couple.service'
 import { COLORS } from '@/theme/colors'
 
 type WelcomeStep = 'home' | 'createForm' | 'enterForm' | 'codeDisplay'
@@ -25,6 +26,7 @@ const Welcome = (): React.ReactElement => {
   const [coupleNameError, setCoupleNameError] = useState('')
   const [userNameError, setUserNameError] = useState('')
   const [coupleCodeError, setCoupleCodeError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -81,7 +83,7 @@ const Welcome = (): React.ReactElement => {
     setCoupleCodeError('')
   }
 
-  const handleCreateCode = (): void => {
+  const handleCreateCode = async (): Promise<void> => {
     const coupleNameValidation = validateName(coupleName)
     const userNameValidation = validateName(userName)
 
@@ -92,16 +94,27 @@ const Welcome = (): React.ReactElement => {
       return
     }
 
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
-    setGeneratedCode(code)
-    setCurrentStep('codeDisplay')
+    setIsLoading(true)
+    setCoupleNameError('')
+
+    try {
+      const code = Math.random().toString(36).substring(2, 8).toUpperCase()
+      await createCouple(coupleName, userName, code)
+      setGeneratedCode(code)
+      setCurrentStep('codeDisplay')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao criar casal'
+      setCoupleNameError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleContinue = (): void => {
     console.warn('Continue as:', userName)
   }
 
-  const handleEnter = (): void => {
+  const handleEnter = async (): Promise<void> => {
     const codeValidation = validateCoupleCode(coupleCode)
     const userNameValidation = validateName(userName)
 
@@ -112,7 +125,32 @@ const Welcome = (): React.ReactElement => {
       return
     }
 
-    console.warn('Entering with code:', coupleCode, 'as:', userName)
+    setIsLoading(true)
+    setCoupleCodeError('')
+
+    try {
+      const couple = await validateCode(coupleCode)
+
+      if (!couple) {
+        setCoupleCodeError('Código inválido')
+        setIsLoading(false)
+        return
+      }
+
+      if (couple.validated) {
+        setCoupleCodeError('Este código já foi usado')
+        setIsLoading(false)
+        return
+      }
+
+      await updateCoupleUser2(couple.id, userName)
+      console.warn('Entering with code:', coupleCode, 'as:', userName)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao validar código'
+      setCoupleCodeError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const renderStep = (): React.ReactElement => {
@@ -130,6 +168,7 @@ const Welcome = (): React.ReactElement => {
             onEnter={handleEnter}
             coupleCodeError={coupleCodeError}
             userNameError={userNameError}
+            isLoading={isLoading}
           />
         )
       case 'createForm':
@@ -143,6 +182,7 @@ const Welcome = (): React.ReactElement => {
             onCreateCode={handleCreateCode}
             coupleNameError={coupleNameError}
             userNameError={userNameError}
+            isLoading={isLoading}
           />
         )
       case 'home':

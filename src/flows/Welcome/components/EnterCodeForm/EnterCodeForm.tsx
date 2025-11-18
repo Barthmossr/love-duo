@@ -15,7 +15,8 @@ const EnterCodeForm = ({
   onBack,
   onEnter,
   coupleCodeError,
-  userNameError
+  userNameError,
+  isLoading = false
 }: EnterCodeFormProps): React.ReactElement => {
   return (
     <>
@@ -25,6 +26,7 @@ const EnterCodeForm = ({
         onChangeText={onCoupleCodeChange}
         placeholder="Ex: RFBZ7H"
         error={coupleCodeError}
+        disabled={isLoading}
       />
       <Text style={styles.cardTitle}>Seu Nome</Text>
       <Input
@@ -32,13 +34,14 @@ const EnterCodeForm = ({
         onChangeText={onUserNameChange}
         placeholder="Ex: Maria"
         error={userNameError}
+        disabled={isLoading}
       />
       <View style={styles.buttonRow}>
         <View style={styles.buttonHalf}>
-          <Button title="Voltar" onPress={onBack} variant="light" />
+          <Button title="Voltar" onPress={onBack} variant="light" disabled={isLoading} />
         </View>
         <View style={styles.buttonHalf}>
-          <Button title="Entrar" onPress={onEnter} variant="primary" />
+          <Button title="Entrar" onPress={onEnter} variant="primary" disabled={isLoading} />
         </View>
       </View>
     </>
