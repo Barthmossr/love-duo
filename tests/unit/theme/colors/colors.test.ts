@@ -1,0 +1,25 @@
+import { COLORS } from '@/theme/colors'
+
+describe('COLORS', () => {
+  it('should export color palette with proper structure', () => {
+    expect(COLORS).toBeDefined()
+    expect(COLORS.accent.bg).toBe('#feaf83')
+    expect(COLORS.accent.text).toBe('#20212b')
+    expect(COLORS.primary.bg).toBe('#ff9da5')
+    expect(COLORS.primary.text).toBe('#ffffff')
+    expect(COLORS.secondary.bg).toBe('#c1a9ee')
+    expect(COLORS.secondary.text).toBe('#20212b')
+    expect(COLORS.muted.bg).toBe('#eee7fd')
+    expect(COLORS.muted.text).toBe('#61626f')
+    expect(COLORS.destructive.bg).toBe('#e7000b')
+    expect(COLORS.destructive.text).toBe('#ffffff')
+    expect(COLORS.card.bg).toBe('#ffffff')
+    expect(COLORS.card.text).toBe('#20212b')
+    expect(COLORS.popover.bg).toBe('#ffffff')
+    expect(COLORS.popover.text).toBe('#20212b')
+    expect(COLORS.input.bg).toBe('#e0dbea')
+    expect(COLORS.border.bg).toBe('#e0dbea')
+    expect(COLORS.ring.bg).toBe('#ff9da5')
+    expect(COLORS.shadow.bg).toBe('#000000')
+  })
+})

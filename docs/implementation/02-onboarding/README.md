@@ -52,13 +52,7 @@ Step 03 — Screens & navigation
 ```typescript
 type RouteName = 'Login' | 'Register' | 'PairCode' | 'Confirm' | 'Complete'
 
-const ONBOARDING_ROUTES: RouteName[] = [
-  'Login',
-  'Register',
-  'PairCode',
-  'Confirm',
-  'Complete'
-]
+const ONBOARDING_ROUTES: RouteName[] = ['Login', 'Register', 'PairCode', 'Confirm', 'Complete']
 
 export { ONBOARDING_ROUTES }
 ```

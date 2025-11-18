@@ -1,0 +1,10 @@
+import type { Fonts } from './fonts.types'
+
+const FONTS: Fonts = {
+  regular: 'Poppins_400Regular',
+  medium: 'Poppins_500Medium',
+  semiBold: 'Poppins_600SemiBold',
+  bold: 'Poppins_700Bold'
+}
+
+export { FONTS }

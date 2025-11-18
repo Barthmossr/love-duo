@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 22.20.0
           cache: npm
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run test:coverage
       - uses: actions/upload-artifact@v4
         if: always()

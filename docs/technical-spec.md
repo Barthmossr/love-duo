@@ -171,27 +171,17 @@ const syncSlice = createSlice({
       state.userBAuth = action.payload
     },
     evaluateGate(state) {
-      const bothLoggedIn =
-        state.userAAuth === 'loggedIn' && state.userBAuth === 'loggedIn'
+      const bothLoggedIn = state.userAAuth === 'loggedIn' && state.userBAuth === 'loggedIn'
       state.enabled = state.isPaired && bothLoggedIn
     }
   }
 })
 
-const selectSyncEnabled = (root: { sync: SyncState }): boolean =>
-  root.sync.enabled
+const selectSyncEnabled = (root: { sync: SyncState }): boolean => root.sync.enabled
 
-const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } =
-  syncSlice.actions
+const { setPaired, setUserAAuth, setUserBAuth, evaluateGate } = syncSlice.actions
 
-export {
-  syncSlice,
-  selectSyncEnabled,
-  setPaired,
-  setUserAAuth,
-  setUserBAuth,
-  evaluateGate
-}
+export { syncSlice, selectSyncEnabled, setPaired, setUserAAuth, setUserBAuth, evaluateGate }
 ```
 
 ```ts
@@ -667,8 +657,7 @@ interface CoupleSyncGateInput {
 }
 
 const isSyncEnabled = (input: CoupleSyncGateInput): boolean => {
-  const bothLoggedIn =
-    input.userAAuth === 'loggedIn' && input.userBAuth === 'loggedIn'
+  const bothLoggedIn = input.userAAuth === 'loggedIn' && input.userBAuth === 'loggedIn'
   return input.isPaired && bothLoggedIn
 }
 
