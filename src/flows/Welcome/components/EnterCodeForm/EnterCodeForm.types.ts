@@ -7,6 +7,7 @@ interface EnterCodeFormProps {
   onEnter: () => void
   coupleCodeError?: string
   userNameError?: string
+  isLoading?: boolean
 }
 
 export type { EnterCodeFormProps }
