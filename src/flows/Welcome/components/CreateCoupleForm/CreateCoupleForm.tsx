@@ -13,14 +13,26 @@ const CreateCoupleForm = ({
   onCoupleNameChange,
   onUserNameChange,
   onBack,
-  onCreateCode
+  onCreateCode,
+  coupleNameError,
+  userNameError
 }: CreateCoupleFormProps): React.ReactElement => {
   return (
     <>
       <Text style={styles.cardTitle}>Nome do Casal</Text>
-      <Input value={coupleName} onChangeText={onCoupleNameChange} placeholder="Ex: João & Maria" />
+      <Input
+        value={coupleName}
+        onChangeText={onCoupleNameChange}
+        placeholder="Ex: João & Maria"
+        error={coupleNameError}
+      />
       <Text style={styles.cardTitle}>Seu Nome</Text>
-      <Input value={userName} onChangeText={onUserNameChange} placeholder="Ex: João" />
+      <Input
+        value={userName}
+        onChangeText={onUserNameChange}
+        placeholder="Ex: João"
+        error={userNameError}
+      />
       <View style={styles.buttonRow}>
         <View style={styles.buttonHalf}>
           <Button title="Voltar" onPress={onBack} variant="light" />

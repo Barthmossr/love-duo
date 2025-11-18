@@ -5,6 +5,8 @@ interface EnterCodeFormProps {
   onUserNameChange: (_text: string) => void
   onBack: () => void
   onEnter: () => void
+  coupleCodeError?: string
+  userNameError?: string
 }
 
 export type { EnterCodeFormProps }

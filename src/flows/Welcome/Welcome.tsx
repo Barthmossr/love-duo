@@ -22,6 +22,9 @@ const Welcome = (): React.ReactElement => {
   const [coupleCode, setCoupleCode] = useState('')
   const [userName, setUserName] = useState('')
   const [generatedCode, setGeneratedCode] = useState('')
+  const [coupleNameError, setCoupleNameError] = useState('')
+  const [userNameError, setUserNameError] = useState('')
+  const [coupleCodeError, setCoupleCodeError] = useState('')
 
   useEffect(() => {
     const loadAnimation = async (): Promise<void> => {
@@ -39,6 +42,26 @@ const Welcome = (): React.ReactElement => {
     loadAnimation()
   }, [])
 
+  const validateName = (name: string): string => {
+    if (!name.trim()) {
+      return 'Nome não pode estar vazio'
+    }
+    if (name.length < 1 || name.length > 16) {
+      return 'Nome deve ter entre 1 e 16 caracteres'
+    }
+    return ''
+  }
+
+  const validateCoupleCode = (code: string): string => {
+    if (!code.trim()) {
+      return 'Código não pode estar vazio'
+    }
+    if (code.length !== 6) {
+      return 'Código deve ter 6 caracteres'
+    }
+    return ''
+  }
+
   const handleCreateCouple = (): void => {
     setCurrentStep('createForm')
   }
@@ -53,9 +76,22 @@ const Welcome = (): React.ReactElement => {
     setCoupleCode('')
     setUserName('')
     setGeneratedCode('')
+    setCoupleNameError('')
+    setUserNameError('')
+    setCoupleCodeError('')
   }
 
   const handleCreateCode = (): void => {
+    const coupleNameValidation = validateName(coupleName)
+    const userNameValidation = validateName(userName)
+
+    setCoupleNameError(coupleNameValidation)
+    setUserNameError(userNameValidation)
+
+    if (coupleNameValidation || userNameValidation) {
+      return
+    }
+
     const code = Math.random().toString(36).substring(2, 8).toUpperCase()
     setGeneratedCode(code)
     setCurrentStep('codeDisplay')
@@ -66,6 +102,16 @@ const Welcome = (): React.ReactElement => {
   }
 
   const handleEnter = (): void => {
+    const codeValidation = validateCoupleCode(coupleCode)
+    const userNameValidation = validateName(userName)
+
+    setCoupleCodeError(codeValidation)
+    setUserNameError(userNameValidation)
+
+    if (codeValidation || userNameValidation) {
+      return
+    }
+
     console.warn('Entering with code:', coupleCode, 'as:', userName)
   }
 
@@ -82,6 +128,8 @@ const Welcome = (): React.ReactElement => {
             onUserNameChange={setUserName}
             onBack={handleBack}
             onEnter={handleEnter}
+            coupleCodeError={coupleCodeError}
+            userNameError={userNameError}
           />
         )
       case 'createForm':
@@ -93,6 +141,8 @@ const Welcome = (): React.ReactElement => {
             onUserNameChange={setUserName}
             onBack={handleBack}
             onCreateCode={handleCreateCode}
+            coupleNameError={coupleNameError}
+            userNameError={userNameError}
           />
         )
       case 'home':

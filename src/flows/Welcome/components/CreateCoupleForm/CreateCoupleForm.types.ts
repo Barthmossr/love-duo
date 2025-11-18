@@ -5,6 +5,8 @@ interface CreateCoupleFormProps {
   onUserNameChange: (_text: string) => void
   onBack: () => void
   onCreateCode: () => void
+  coupleNameError?: string
+  userNameError?: string
 }
 
 export type { CreateCoupleFormProps }

@@ -3,6 +3,7 @@ interface InputProps {
   onChangeText: (_text: string) => void
   placeholder?: string
   disabled?: boolean
+  error?: string
 }
 
 export type { InputProps }

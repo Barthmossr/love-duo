@@ -23,6 +23,15 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5
+  },
+  inputError: {
+    borderColor: COLORS.destructive.bg
+  },
+  errorText: {
+    fontFamily: FONTS.regular,
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.destructive.bg,
+    marginTop: SPACING.xs
   }
 })
 

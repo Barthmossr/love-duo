@@ -96,14 +96,17 @@ describe('Welcome', () => {
 
     fireEvent.press(getByText('Criar Novo Casal'))
 
-    const input = getByPlaceholderText('Ex: João & Maria')
-    fireEvent.changeText(input, 'Test Couple')
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(coupleNameInput, 'Test Couple')
+
+    const userNameInput = getByPlaceholderText('Ex: João')
+    fireEvent.changeText(userNameInput, 'João')
 
     fireEvent.press(getByText('Criar Código'))
 
     expect(getByText('Seu código do casal é:')).toBeDefined()
     expect(getByText('Compartilhe este código com seu parceiro(a)')).toBeDefined()
-    expect(queryByText(/Continuar como Usuário 1/)).toBeDefined()
+    expect(queryByText(/Continuar como João/)).toBeDefined()
   })
 
   it('should handle enter code button press', () => {
@@ -120,6 +123,9 @@ describe('Welcome', () => {
     const { getByText, getByPlaceholderText } = render(<Welcome />)
 
     fireEvent.press(getByText('Criar Novo Casal'))
+
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(coupleNameInput, 'Test Couple')
 
     const nameInput = getByPlaceholderText('Ex: João')
     fireEvent.changeText(nameInput, 'João')
@@ -148,13 +154,13 @@ describe('Welcome', () => {
     expect(console.warn).toHaveBeenCalledWith('Entering with code:', 'ABC123', 'as:', 'Maria')
   })
 
-  it('should generate code without couple name and show empty string fallback', () => {
-    const { getByText } = render(<Welcome />)
+  it('should show validation errors when fields are empty', () => {
+    const { getAllByText } = render(<Welcome />)
 
-    fireEvent.press(getByText('Criar Novo Casal'))
-    fireEvent.press(getByText('Criar Código'))
+    fireEvent.press(getAllByText('Criar Novo Casal')[0])
+    fireEvent.press(getAllByText('Criar Código')[0])
 
-    expect(getByText('Seu código do casal é:')).toBeDefined()
-    expect(getByText('Continuar como ')).toBeDefined()
+    const errorMessages = getAllByText('Nome não pode estar vazio')
+    expect(errorMessages.length).toBeGreaterThan(0)
   })
 })
