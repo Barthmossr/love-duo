@@ -163,4 +163,62 @@ describe('Welcome', () => {
     const errorMessages = getAllByText('Nome não pode estar vazio')
     expect(errorMessages.length).toBeGreaterThan(0)
   })
+
+  it('should show validation error when name is too long', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Criar Novo Casal'))
+
+    const coupleNameInput = getByPlaceholderText('Ex: João & Maria')
+    fireEvent.changeText(coupleNameInput, 'This is a very long name that exceeds limit')
+
+    const userNameInput = getByPlaceholderText('Ex: João')
+    fireEvent.changeText(userNameInput, 'João')
+
+    fireEvent.press(getByText('Criar Código'))
+
+    expect(getByText('Nome deve ter entre 1 e 16 caracteres')).toBeDefined()
+  })
+
+  it('should show validation error when code is empty in enter form', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    expect(getByText('Código não pode estar vazio')).toBeDefined()
+  })
+
+  it('should show validation error when code length is invalid', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC')
+
+    const nameInput = getByPlaceholderText('Ex: Maria')
+    fireEvent.changeText(nameInput, 'Maria')
+
+    fireEvent.press(getByText('Entrar'))
+
+    expect(getByText('Código deve ter 6 caracteres')).toBeDefined()
+  })
+
+  it('should not enter when validation fails in enter form', () => {
+    const { getByText, getByPlaceholderText } = render(<Welcome />)
+
+    fireEvent.press(getByText('Entrar com Código'))
+
+    const codeInput = getByPlaceholderText('Ex: RFBZ7H')
+    fireEvent.changeText(codeInput, 'ABC')
+
+    fireEvent.press(getByText('Entrar'))
+
+    expect(console.warn).not.toHaveBeenCalledWith(expect.stringContaining('Entering with code'))
+  })
 })
